@@ -23,7 +23,7 @@ export class QuestionEntity {
   surveyId: number;
 
   @Field(() => SurveyEntity, { description: '해당 문항이 속한 설문지' })
-  @ManyToOne(() => SurveyEntity)
+  @ManyToOne(() => SurveyEntity, (survey) => survey.questions)
   @JoinColumn()
   survey: SurveyEntity;
 }
