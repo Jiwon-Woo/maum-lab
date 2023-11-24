@@ -1,0 +1,18 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type SurveyEntity {
+  """설문지 고유 아이디"""
+  id: Int!
+
+  """설문지 제목"""
+  title: String!
+
+  """설문지 설명"""
+  description: String
+}
+
+type Query {
+  surveys: [SurveyEntity!]!
+}
