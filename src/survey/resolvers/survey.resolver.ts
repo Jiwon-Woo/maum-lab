@@ -2,7 +2,7 @@ import { Resolver, Query, ResolveField, Parent } from '@nestjs/graphql';
 import { SurveyEntity } from '../entities/survey.entity';
 import { SurveyService } from '../survey.service';
 import { QuestionEntity } from 'src/question/entities/question.entity';
-import { QuestionService } from 'src/question/resolvers/question.service';
+import { QuestionService } from 'src/question/question.service';
 
 @Resolver(SurveyEntity)
 export class SurveyResolver {
