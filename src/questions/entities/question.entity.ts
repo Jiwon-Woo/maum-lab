@@ -10,7 +10,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-@ObjectType()
+@ObjectType({ description: '설문지의 문항' })
 @Entity('question')
 export class Question {
   @Field(() => ID, { description: '설문지 문항 고유 아이디' })

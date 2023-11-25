@@ -2,7 +2,7 @@ import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import { Question } from 'src/questions/entities/question.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
-@ObjectType()
+@ObjectType({ description: '설문지 문항의 선택지' })
 @Entity('option')
 export class Option {
   @Field(() => ID, { description: '문항 선택지의 고유 아이디' })

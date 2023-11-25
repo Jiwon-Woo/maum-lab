@@ -2,7 +2,7 @@ import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Question } from 'src/questions/entities/question.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-@ObjectType()
+@ObjectType({ description: '설문지' })
 @Entity('survey')
 export class Survey {
   @Field(() => ID, { description: '설문지 고유 아이디' })
