@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
-export class SurveyService {
+export class SurveysService {
   constructor(
     @InjectRepository(SurveyEntity)
     private surveyRepository: Repository<SurveyEntity>,

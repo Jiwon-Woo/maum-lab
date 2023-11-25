@@ -1,6 +1,6 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
-import { SurveyEntity } from 'src/survey/entities/survey.entity';
-import { SurveySchema } from 'src/survey/schemas/survey.schema';
+import { SurveyEntity } from 'src/surveys/entities/survey.entity';
+import { SurveySchema } from 'src/surveys/schemas/survey.schema';
 import {
   Column,
   Entity,

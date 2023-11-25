@@ -6,7 +6,7 @@ import { join } from 'path';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
-import { SurveyModule } from './survey/survey.module';
+import { SurveysModule } from './surveys/surveys.module';
 import { QuestionModule } from './question/question.module';
 
 @Module({
@@ -30,7 +30,7 @@ import { QuestionModule } from './question/question.module';
       synchronize: true,
       logging: true,
     }),
-    SurveyModule,
+    SurveysModule,
     QuestionModule,
   ],
 })
