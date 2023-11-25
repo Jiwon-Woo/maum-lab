@@ -3,11 +3,11 @@ import { SurveyResolver } from './resolvers/survey.resolver';
 import { SurveysService } from './surveys.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SurveyEntity } from './entities/survey.entity';
-import { QuestionEntity } from 'src/question/entities/question.entity';
-import { QuestionService } from 'src/question/question.service';
+import { QuestionEntity } from 'src/questions/entities/question.entity';
+import { QuestionsService } from 'src/questions/questions.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([SurveyEntity, QuestionEntity])],
-  providers: [SurveyResolver, SurveysService, QuestionService],
+  providers: [SurveyResolver, SurveysService, QuestionsService],
 })
 export class SurveysModule {}

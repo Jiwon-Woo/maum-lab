@@ -7,7 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { SurveysModule } from './surveys/surveys.module';
-import { QuestionModule } from './question/question.module';
+import { QuestionsModule } from './questions/questions.module';
 
 @Module({
   imports: [
@@ -31,7 +31,7 @@ import { QuestionModule } from './question/question.module';
       logging: true,
     }),
     SurveysModule,
-    QuestionModule,
+    QuestionsModule,
   ],
 })
 export class AppModule {}
