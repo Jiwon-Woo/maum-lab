@@ -17,4 +17,12 @@ export class SurveysService {
   async findById(id: number) {
     return await this.surveyRepository.findOne({ where: { id } });
   }
+
+  async findQuestionsById(id: number) {
+    const survey = await this.surveyRepository.findOne({
+      where: { id },
+      relations: ['questions'],
+    });
+    return survey?.questions;
+  }
 }

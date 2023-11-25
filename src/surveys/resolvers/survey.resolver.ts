@@ -9,14 +9,10 @@ import {
 import { Survey } from '../entities/survey.entity';
 import { SurveysService } from '../surveys.service';
 import { Question } from 'src/questions/entities/question.entity';
-import { QuestionsService } from 'src/questions/questions.service';
 
 @Resolver(Survey)
 export class SurveyResolver {
-  constructor(
-    private surveysService: SurveysService,
-    private questionsService: QuestionsService,
-  ) {}
+  constructor(private surveysService: SurveysService) {}
 
   @Query(() => [Survey], { description: '모든 설문지 조회' })
   async allSurveys() {
@@ -35,6 +31,6 @@ export class SurveyResolver {
 
   @ResolveField(() => [Question])
   async questions(@Parent() survey: Survey) {
-    return await this.questionsService.findBySurveyId(survey.id);
+    return await this.surveysService.findQuestionsById(survey.id);
   }
 }
