@@ -1,5 +1,6 @@
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { QuestionEntity } from 'src/question/entities/question.entity';
+import { QuestionSchema } from 'src/question/schemas/question.schema';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @ObjectType()
@@ -17,7 +18,7 @@ export class SurveyEntity {
   @Column({ type: 'text', nullable: true })
   description?: string;
 
-  @Field(() => [QuestionEntity], { description: '설문지의 문항들' })
+  @Field(() => [QuestionSchema], { description: '설문지의 문항들' })
   @OneToMany(() => QuestionEntity, (question) => question.survey)
-  questions: QuestionEntity[];
+  questions: QuestionSchema[];
 }

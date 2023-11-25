@@ -1,5 +1,6 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import { SurveyEntity } from 'src/survey/entities/survey.entity';
+import { SurveySchema } from 'src/survey/schemas/survey.schema';
 import {
   Column,
   Entity,
@@ -30,8 +31,8 @@ export class QuestionEntity {
   @Column()
   surveyId: number;
 
-  @Field(() => SurveyEntity, { description: '해당 문항이 속한 설문지' })
+  @Field(() => SurveySchema, { description: '해당 문항이 속한 설문지' })
   @ManyToOne(() => SurveyEntity, (survey) => survey.questions)
   @JoinColumn()
-  survey: SurveyEntity;
+  survey: SurveySchema;
 }

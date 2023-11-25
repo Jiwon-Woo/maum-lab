@@ -2,15 +2,46 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type SurveySchema {
+  """설문지 고유 아이디"""
+  id: ID!
+
+  """설문지 제목"""
+  title: String!
+
+  """설문지 설명"""
+  description: String
+}
+
 type QuestionEntity {
   """설문지 문항 고유 아이디"""
   id: ID!
 
-  """설문지 문항 내용"""
-  content: String!
+  """설문지 문항 제목"""
+  title: String!
+
+  """설문지 문항 부가 설명"""
+  description: String
+
+  """설문지 문항 번호"""
+  order: Int!
 
   """해당 문항이 속한 설문지"""
-  survey: SurveyEntity!
+  survey: SurveySchema!
+}
+
+type QuestionSchema {
+  """설문지 문항 고유 아이디"""
+  id: ID!
+
+  """설문지 문항 제목"""
+  title: String!
+
+  """설문지 문항 부가 설명"""
+  description: String
+
+  """설문지 문항 번호"""
+  order: Int!
 }
 
 type SurveyEntity {
@@ -24,7 +55,7 @@ type SurveyEntity {
   description: String
 
   """설문지의 문항들"""
-  questions: [QuestionEntity!]!
+  questions: [QuestionSchema!]!
 }
 
 type Query {
