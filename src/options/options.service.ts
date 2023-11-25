@@ -10,8 +10,16 @@ export class OptionsService {
     private optionRepository: Repository<Option>,
   ) {}
 
-  async findAll() {
-    return await this.optionRepository.find();
+  async findById(id: number) {
+    return await this.optionRepository.findOne({
+      where: { id },
+    });
+  }
+
+  async findByQuestionId(questionId: number) {
+    return await this.optionRepository.find({
+      where: { questionId },
+    });
   }
 
   async findQuestionById(id: number) {

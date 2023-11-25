@@ -10,8 +10,8 @@ export class QuestionsService {
     private questionRepository: Repository<Question>,
   ) {}
 
-  async findAll() {
-    return await this.questionRepository.find();
+  async findById(id: number) {
+    return await this.questionRepository.findOne({ where: { id } });
   }
 
   async findBySurveyId(surveyId: number) {
