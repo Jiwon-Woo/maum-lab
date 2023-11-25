@@ -36,4 +36,8 @@ export class Question {
   @ManyToOne(() => Survey, (survey) => survey.questions)
   @JoinColumn()
   survey: Survey;
+
+  @Field(() => [Option], { description: '해당 문항의 선택지들' })
+  @OneToMany(() => Option, (option) => option.question)
+  options: Option[];
 }

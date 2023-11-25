@@ -16,4 +16,9 @@ export class QuestionResolver {
   async survey(@Parent() question: Question) {
     return await this.questionsService.findSurveyById(question.id);
   }
+
+  @ResolveField(() => [Option])
+  async options(@Parent() question: Question) {
+    return await this.questionsService.findOptionsById(question.id);
+  }
 }

@@ -2,18 +2,24 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type SurveySchema {
-  """설문지 고유 아이디"""
+type Option {
+  """문항 선택지의 고유 아이디"""
   id: ID!
 
-  """설문지 제목"""
-  title: String!
+  """문항 선택지 내용"""
+  content: String!
 
-  """설문지 설명"""
-  description: String
+  """문항 선택지 번호"""
+  order: Int!
+
+  """문항 선택지 점수"""
+  score: Int!
+
+  """해당 선택지가 속한 문항"""
+  question: Question!
 }
 
-type QuestionEntity {
+type Question {
   """설문지 문항 고유 아이디"""
   id: ID!
 
@@ -27,24 +33,13 @@ type QuestionEntity {
   order: Int!
 
   """해당 문항이 속한 설문지"""
-  survey: SurveySchema!
+  survey: Survey!
+
+  """해당 문항의 선택지들"""
+  options: [Option!]!
 }
 
-type QuestionSchema {
-  """설문지 문항 고유 아이디"""
-  id: ID!
-
-  """설문지 문항 제목"""
-  title: String!
-
-  """설문지 문항 부가 설명"""
-  description: String
-
-  """설문지 문항 번호"""
-  order: Int!
-}
-
-type SurveyEntity {
+type Survey {
   """설문지 고유 아이디"""
   id: ID!
 
@@ -55,10 +50,11 @@ type SurveyEntity {
   description: String
 
   """설문지의 문항들"""
-  questions: [QuestionSchema!]!
+  questions: [Question!]!
 }
 
 type Query {
-  allSurveys: [SurveyEntity!]!
-  allQuestions: [QuestionEntity!]!
+  allSurveys: [Survey!]!
+  allQuestions: [Question!]!
+  allOptions: [Option!]!
 }

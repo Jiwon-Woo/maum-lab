@@ -28,4 +28,12 @@ export class QuestionsService {
     });
     return question?.survey;
   }
+
+  async findOptionsById(id: number) {
+    const question = await this.questionRepository.findOne({
+      where: { id },
+      relations: ['options'],
+    });
+    return question?.options;
+  }
 }

@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { SurveysModule } from './surveys/surveys.module';
 import { QuestionsModule } from './questions/questions.module';
+import { OptionsModule } from './options/options.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { QuestionsModule } from './questions/questions.module';
     }),
     SurveysModule,
     QuestionsModule,
+    OptionsModule,
   ],
 })
 export class AppModule {}
