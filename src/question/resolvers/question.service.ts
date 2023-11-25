@@ -15,7 +15,10 @@ export class QuestionService {
   }
 
   async findBySurveyId(surveyId: number) {
-    return await this.questionRepository.find({ where: { surveyId } });
+    return await this.questionRepository.find({
+      where: { surveyId },
+      order: { order: 'ASC' },
+    });
   }
 
   async findSurveyById(id: number) {

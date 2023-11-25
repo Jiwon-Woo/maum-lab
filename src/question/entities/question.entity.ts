@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import { SurveyEntity } from 'src/survey/entities/survey.entity';
 import {
   Column,
@@ -15,9 +15,17 @@ export class QuestionEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Field({ description: '설문지 문항 내용' })
+  @Field({ description: '설문지 문항 제목' })
   @Column()
-  content: string;
+  title: string;
+
+  @Field({ description: '설문지 문항 부가 설명', nullable: true })
+  @Column({ nullable: true })
+  description?: string;
+
+  @Field(() => Int, { description: '설문지 문항 번호' })
+  @Column()
+  order: number;
 
   @Column()
   surveyId: number;
