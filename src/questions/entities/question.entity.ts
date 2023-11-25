@@ -1,17 +1,18 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
-import { SurveyEntity } from 'src/surveys/entities/survey.entity';
-import { SurveySchema } from 'src/surveys/schemas/survey.schema';
+import { Option } from 'src/options/entities/option.entity';
+import { Survey } from 'src/surveys/entities/survey.entity';
 import {
   Column,
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
 @ObjectType()
 @Entity('question')
-export class QuestionEntity {
+export class Question {
   @Field(() => ID, { description: '설문지 문항 고유 아이디' })
   @PrimaryGeneratedColumn()
   id: number;
@@ -31,8 +32,8 @@ export class QuestionEntity {
   @Column()
   surveyId: number;
 
-  @Field(() => SurveySchema, { description: '해당 문항이 속한 설문지' })
-  @ManyToOne(() => SurveyEntity, (survey) => survey.questions)
+  @Field(() => Survey, { description: '해당 문항이 속한 설문지' })
+  @ManyToOne(() => Survey, (survey) => survey.questions)
   @JoinColumn()
-  survey: SurveySchema;
+  survey: Survey;
 }

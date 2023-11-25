@@ -1,23 +1,23 @@
 import { Resolver, Query, ResolveField, Parent } from '@nestjs/graphql';
-import { SurveyEntity } from '../entities/survey.entity';
+import { Survey } from '../entities/survey.entity';
 import { SurveysService } from '../surveys.service';
-import { QuestionEntity } from 'src/questions/entities/question.entity';
+import { Question } from 'src/questions/entities/question.entity';
 import { QuestionsService } from 'src/questions/questions.service';
 
-@Resolver(SurveyEntity)
+@Resolver(Survey)
 export class SurveyResolver {
   constructor(
     private surveysService: SurveysService,
     private questionsService: QuestionsService,
   ) {}
 
-  @Query(() => [SurveyEntity])
+  @Query(() => [Survey])
   async allSurveys() {
     return await this.surveysService.findAll();
   }
 
-  @ResolveField(() => [QuestionEntity])
-  async questions(@Parent() survey: SurveyEntity) {
+  @ResolveField(() => [Question])
+  async questions(@Parent() survey: Survey) {
     return await this.questionsService.findBySurveyId(survey.id);
   }
 }

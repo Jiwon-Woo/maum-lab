@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { QuestionEntity } from './entities/question.entity';
+import { Question } from './entities/question.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class QuestionsService {
   constructor(
-    @InjectRepository(QuestionEntity)
-    private questionRepository: Repository<QuestionEntity>,
+    @InjectRepository(Question)
+    private questionRepository: Repository<Question>,
   ) {}
 
   async findAll() {
