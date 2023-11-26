@@ -9,22 +9,30 @@ import {
 import { Option } from '../entities/option.entity';
 import { OptionsService } from '../options.service';
 import { Question } from 'src/questions/entities/question.entity';
+import { Pagination } from 'src/utils/pagination';
+import { OptionsConnection } from '../dto/options.dto';
 
 @Resolver(Option)
 export class OptionResolver {
   constructor(private optionsService: OptionsService) {}
 
-  @Query(() => [Option], {
+  @Query(() => OptionsConnection, {
     description: '특정 설문지 문항에 해당하는 선택지 목록',
   })
-  async findOptions(
+  async getOptions(
     @Args('questionId', {
       type: () => Int,
       description: '설문지 문항의 고유 아이디',
     })
     questionId: number,
+    @Args('pagination') pagination: Pagination,
   ) {
-    return await this.optionsService.findByQuestionId(questionId);
+    const { pageSize } = pagination;
+    const [options, count] = await this.optionsService.findByQuestionId(
+      questionId,
+      pagination,
+    );
+    return new OptionsConnection(options, count, pageSize);
   }
 
   @Query(() => Option, {

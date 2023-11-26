@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Option } from './entities/option.entity';
 import { Repository } from 'typeorm';
+import { Pagination } from 'src/utils/pagination';
 
 @Injectable()
 export class OptionsService {
@@ -16,9 +17,13 @@ export class OptionsService {
     });
   }
 
-  async findByQuestionId(questionId: number) {
-    return await this.optionRepository.find({
+  async findByQuestionId(questionId: number, pagination: Pagination) {
+    const { page, pageSize } = pagination;
+    return await this.optionRepository.findAndCount({
       where: { questionId },
+      order: { order: 'ASC' },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
     });
   }
 

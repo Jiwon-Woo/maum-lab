@@ -9,14 +9,18 @@ import {
 import { Survey } from '../entities/survey.entity';
 import { SurveysService } from '../surveys.service';
 import { Question } from 'src/questions/entities/question.entity';
+import { Pagination } from 'src/utils/pagination';
+import { SurveysConnection } from '../dto/surveys.dto';
 
 @Resolver(Survey)
 export class SurveyResolver {
   constructor(private surveysService: SurveysService) {}
 
-  @Query(() => [Survey], { description: '모든 설문지 조회' })
-  async allSurveys() {
-    return await this.surveysService.findAll();
+  @Query(() => SurveysConnection, { description: '모든 설문지 조회' })
+  async allSurveys(@Args('pagination') pagination: Pagination) {
+    const { pageSize } = pagination;
+    const [surveys, count] = await this.surveysService.findAndCount(pagination);
+    return new SurveysConnection(surveys, count, pageSize);
   }
 
   @Query(() => Survey, {

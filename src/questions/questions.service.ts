@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Question } from './entities/question.entity';
 import { Repository } from 'typeorm';
+import { Pagination } from 'src/utils/pagination';
 
 @Injectable()
 export class QuestionsService {
@@ -14,10 +15,13 @@ export class QuestionsService {
     return await this.questionRepository.findOne({ where: { id } });
   }
 
-  async findBySurveyId(surveyId: number) {
-    return await this.questionRepository.find({
+  async findAndCountBySurveyId(surveyId: number, pagination: Pagination) {
+    const { page, pageSize } = pagination;
+    return await this.questionRepository.findAndCount({
       where: { surveyId },
       order: { order: 'ASC' },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
     });
   }
 

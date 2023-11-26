@@ -9,19 +9,25 @@ import {
 import { Question } from '../entities/question.entity';
 import { QuestionsService } from '../questions.service';
 import { Survey } from 'src/surveys/entities/survey.entity';
+import { Pagination } from 'src/utils/pagination';
+import { QuestionsConnection } from '../dto/questions.dto';
 
 @Resolver(Question)
 export class QuestionResolver {
   constructor(private questionsService: QuestionsService) {}
 
-  @Query(() => [Question], {
+  @Query(() => QuestionsConnection, {
     description: '설문지 고유 아이디를 통해 해당 설문지에 속한 문항 목록 조회',
   })
-  async findQuestions(
+  async getQuestions(
     @Args('surveyId', { type: () => Int, description: '설문지 고유 아이디' })
     surveyId: number,
+    @Args('pagination') pagination: Pagination,
   ) {
-    return await this.questionsService.findBySurveyId(surveyId);
+    const { pageSize } = pagination;
+    const [questions, count] =
+      await this.questionsService.findAndCountBySurveyId(surveyId, pagination);
+    return new QuestionsConnection(questions, count, pageSize);
   }
 
   @Query(() => Question, {
