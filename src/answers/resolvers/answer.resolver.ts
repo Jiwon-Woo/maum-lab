@@ -8,8 +8,10 @@ import {
 } from '@nestjs/graphql';
 import { Answer } from '../entities/answer.entity';
 import { AnswersService } from '../answers.service';
-import { AnswersConnection } from '../dto/answers-connection.dto';
+import { AnswersConnection } from '../dto/answers.dto';
 import { Question } from 'src/questions/entities/question.entity';
+import { SurveyResponse } from '../dto/survey-response.dto';
+import { Pagination } from 'src/utils/pagination';
 
 @Resolver(Answer)
 export class AnswerResolver {
@@ -18,21 +20,18 @@ export class AnswerResolver {
   @Query(() => AnswersConnection, {
     description: '특정 유저가 특정 설문지에 답변한 정보 ',
   })
-  async findAnswers(
-    @Args('surveyId', { type: () => Int, description: '설문지 고유 아이디' })
-    surveyId: number,
-    @Args('userCode', { description: '설문지에 참여한 유저' })
-    userCode: string,
+  async getAnswers(
+    @Args('surveyResponse') surveyResponse: SurveyResponse,
+    @Args('pagination') pagination: Pagination,
   ) {
-    const answers = await this.answersService.findBySurveyIdAndUserCode(
-      surveyId,
-      userCode,
-    );
-    const totalScore = answers.reduce(
-      (accumulator, answer) => accumulator + answer.option.score,
-      0,
-    );
-    return { totalScore, answers };
+    const { pageSize } = pagination;
+    const [answers, count] =
+      await this.answersService.findAndCountBySurveyResponse(
+        surveyResponse,
+        pagination,
+      );
+    const totalScore = await this.answersService.getTotalScore(surveyResponse);
+    return new AnswersConnection(answers, count, pageSize, totalScore);
   }
 
   @Query(() => Answer, {
