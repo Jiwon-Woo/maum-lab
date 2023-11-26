@@ -9,6 +9,7 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { SurveysModule } from './surveys/surveys.module';
 import { QuestionsModule } from './questions/questions.module';
 import { OptionsModule } from './options/options.module';
+import { AnswersModule } from './answers/answers.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { OptionsModule } from './options/options.module';
     SurveysModule,
     QuestionsModule,
     OptionsModule,
+    AnswersModule,
   ],
 })
 export class AppModule {}

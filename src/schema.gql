@@ -56,6 +56,28 @@ type Survey {
   questions: [Question!]!
 }
 
+type Answer {
+  """설문지 문항 답변의 고유 아이디"""
+  id: ID!
+
+  """설문에 참여한 유저"""
+  userCode: String!
+
+  """답변한 설문지 문항 정보"""
+  question: Question!
+
+  """유저가 고른 선택지 정보"""
+  option: Option!
+}
+
+type AnswersConnection {
+  """특정 유저가 특정 설문지에 답변한 선택지 점수의 총점"""
+  totalScore: Int!
+
+  """특정 유저가 특정 설문지에 답변한 정보"""
+  answers: [Answer!]!
+}
+
 type Query {
   """모든 설문지 조회"""
   allSurveys: [Survey!]!
@@ -89,4 +111,19 @@ type Query {
     """선택지 고유 아이디"""
     id: Int!
   ): Option!
+
+  """특정 유저가 특정 설문지에 답변한 정보 """
+  findAnswers(
+    """설문지 고유 아이디"""
+    surveyId: Int!
+
+    """설문지에 참여한 유저"""
+    userCode: String!
+  ): AnswersConnection!
+
+  """답변 고유 아이디를 통해 특정 답변 정보 조회"""
+  answer(
+    """답변 고유 아이디"""
+    id: Int!
+  ): Answer!
 }
