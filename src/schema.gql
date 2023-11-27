@@ -18,7 +18,18 @@ type Option {
 
   """해당 선택지가 속한 문항"""
   question: Question!
+
+  """설문지 문항 선택지 생성 일시"""
+  createdAt: DateTime!
+
+  """설문지 문항 선택지 수정 일시"""
+  updatedAt: DateTime!
 }
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 """설문지의 문항"""
 type Question {
@@ -39,6 +50,12 @@ type Question {
 
   """해당 문항의 선택지들"""
   options: [Option!]!
+
+  """설문지 문항 생성 일시"""
+  createdAt: DateTime!
+
+  """설문지 문항 수정 일시"""
+  updatedAt: DateTime!
 }
 
 """설문지"""
@@ -54,6 +71,12 @@ type Survey {
 
   """설문지의 문항들"""
   questions: [Question!]!
+
+  """설문지 생성 일시"""
+  createdAt: DateTime!
+
+  """설문지 수정 일시"""
+  updatedAt: DateTime!
 }
 
 """설문지 목록과 메타 데이터"""
@@ -196,4 +219,33 @@ input SurveyResponse {
 
   """설문지에 참여한 유저"""
   userCode: String!
+}
+
+type Mutation {
+  createSurvey(surveyInfo: CreateSurveyInput!): Survey!
+  updateSurvey(
+    """설문지 고유 아이디"""
+    surveyId: Int!
+    surveyInfo: UpdateSurveyInput!
+  ): Survey!
+  deleteSurvey(
+    """설문지 고유 아이디"""
+    surveyId: Int!
+  ): Boolean!
+}
+
+input CreateSurveyInput {
+  """설문지 제목"""
+  title: String!
+
+  """설문지 설명"""
+  description: String
+}
+
+input UpdateSurveyInput {
+  """설문지 제목"""
+  title: String
+
+  """설문지 설명"""
+  description: String
 }

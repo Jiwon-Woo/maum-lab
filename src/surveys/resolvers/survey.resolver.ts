@@ -5,6 +5,7 @@ import {
   Parent,
   Args,
   Int,
+  Mutation,
 } from '@nestjs/graphql';
 import { Survey } from '../entities/survey.entity';
 import { SurveysService } from '../surveys.service';
@@ -12,6 +13,8 @@ import { Question } from 'src/questions/entities/question.entity';
 import { Pagination } from 'src/utils/pagination';
 import { SurveysConnection } from '../dto/surveys.dto';
 import { QuestionLoader } from 'src/questions/question.loader';
+import { CreateSurveyInput } from '../dto/create-survey.dto';
+import { UpdateSurveyInput } from '../dto/update-survey.dto';
 
 @Resolver(Survey)
 export class SurveyResolver {
@@ -39,6 +42,29 @@ export class SurveyResolver {
     id: number,
   ) {
     return await this.surveysService.findOneById(id);
+  }
+
+  @Mutation(() => Survey)
+  async createSurvey(@Args('surveyInfo') surveyInfo: CreateSurveyInput) {
+    return await this.surveysService.create(surveyInfo);
+  }
+
+  @Mutation(() => Survey)
+  async updateSurvey(
+    @Args('surveyId', { type: () => Int, description: '설문지 고유 아이디' })
+    id: number,
+    @Args('surveyInfo') surveyInfo: UpdateSurveyInput,
+  ) {
+    return await this.surveysService.update(id, surveyInfo);
+  }
+
+  @Mutation(() => Boolean)
+  async deleteSurvey(
+    @Args('surveyId', { type: () => Int, description: '설문지 고유 아이디' })
+    id: number,
+  ) {
+    await this.surveysService.delete(id);
+    return true;
   }
 
   @ResolveField(() => [Question])
