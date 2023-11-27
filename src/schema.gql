@@ -232,6 +232,10 @@ type Mutation {
     """설문지 고유 아이디"""
     surveyId: Int!
   ): Boolean!
+  createQuestion(questionInfo: CreateQuestionInput!): Question!
+  updateQuestion(questionId: Int!, questionInfo: UpdateQuestionInput!): Question!
+  updateQuestionsOrder(questionsOrder: [UpdateQuestionOrderInput!]!): [Question!]!
+  deleteQuestion(questionId: Int!): Boolean!
 }
 
 input CreateSurveyInput {
@@ -248,4 +252,27 @@ input UpdateSurveyInput {
 
   """설문지 설명"""
   description: String
+}
+
+input CreateQuestionInput {
+  """문항이 속한 설문지 고유 아이디"""
+  surveyId: Int!
+
+  """설문지 문항 제목"""
+  title: String!
+
+  """설문지 문항 설명"""
+  description: String
+}
+
+input UpdateQuestionInput {
+  """설문지 문항 제목"""
+  title: String
+
+  """설문지 문항 설명"""
+  description: String
+}
+
+input UpdateQuestionOrderInput {
+  id: Int!
 }

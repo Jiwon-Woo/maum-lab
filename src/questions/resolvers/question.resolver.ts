@@ -1,6 +1,7 @@
 import {
   Args,
   Int,
+  Mutation,
   Parent,
   Query,
   ResolveField,
@@ -13,12 +14,18 @@ import { Pagination } from 'src/utils/pagination';
 import { QuestionsConnection } from '../dto/questions.dto';
 import { OptionLoader } from '../../options/option.loader';
 import { SurveyLoader } from 'src/surveys/survey.loader';
+import { CreateQuestionInput } from '../dto/create-question.dto';
+import { SurveysService } from '../../surveys/surveys.service';
+import { BadRequestException } from '@nestjs/common';
+import { UpdateQuestionInput } from '../dto/update-question.dto';
+import { UpdateQuestionOrderInput } from '../dto/update-question-order.dto';
 
 @Resolver(Question)
 export class QuestionResolver {
   constructor(
     private questionsService: QuestionsService,
     private optionLoader: OptionLoader,
+    private surveysService: SurveysService,
     private surveyLoader: SurveyLoader,
   ) {}
 
@@ -46,6 +53,40 @@ export class QuestionResolver {
     id: number,
   ) {
     return await this.questionsService.findOneById(id);
+  }
+
+  @Mutation(() => Question)
+  async createQuestion(
+    @Args('questionInfo') questionInfo: CreateQuestionInput,
+  ) {
+    const { surveyId } = questionInfo;
+    const survey = await this.surveysService.findOneById(surveyId);
+    if (!survey) {
+      throw new BadRequestException();
+    }
+    return await this.questionsService.create(questionInfo);
+  }
+
+  @Mutation(() => Question)
+  async updateQuestion(
+    @Args('questionId', { type: () => Int }) id: number,
+    @Args('questionInfo') questionInfo: UpdateQuestionInput,
+  ) {
+    return await this.questionsService.update(id, questionInfo);
+  }
+
+  @Mutation(() => [Question])
+  async updateQuestionsOrder(
+    @Args('questionsOrder', { type: () => [UpdateQuestionOrderInput] })
+    questionsOrder: UpdateQuestionOrderInput[],
+  ) {
+    return await this.questionsService.updateOrder(questionsOrder);
+  }
+
+  @Mutation(() => Boolean)
+  async deleteQuestion(@Args('questionId', { type: () => Int }) id: number) {
+    await this.questionsService.delete(id);
+    return true;
   }
 
   // TODO: survey 없는 경우 예외 처리
