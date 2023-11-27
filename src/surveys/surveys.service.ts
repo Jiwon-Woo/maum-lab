@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Survey } from './entities/survey.entity';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Pagination } from 'src/utils/pagination';
 
@@ -22,15 +22,11 @@ export class SurveysService {
     });
   }
 
-  async findById(id: number) {
+  async findOneById(id: number) {
     return await this.surveyRepository.findOne({ where: { id } });
   }
 
-  async findQuestionsById(id: number) {
-    const survey = await this.surveyRepository.findOne({
-      where: { id },
-      relations: ['questions'],
-    });
-    return survey?.questions;
+  async findByIds(ids: number[]) {
+    return await this.surveyRepository.find({ where: { id: In(ids) } });
   }
 }

@@ -12,13 +12,19 @@ import { AnswersConnection } from '../dto/answers.dto';
 import { Question } from 'src/questions/entities/question.entity';
 import { SurveyResponse } from '../dto/survey-response.dto';
 import { Pagination } from 'src/utils/pagination';
+import { QuestionLoader } from '../../questions/question.loader';
+import { OptionLoader } from 'src/options/option.loader';
 
 @Resolver(Answer)
 export class AnswerResolver {
-  constructor(private answersService: AnswersService) {}
+  constructor(
+    private answersService: AnswersService,
+    private questionLoader: QuestionLoader,
+    private optionLoader: OptionLoader,
+  ) {}
 
   @Query(() => AnswersConnection, {
-    description: '특정 유저가 특정 설문지에 답변한 정보 ',
+    description: '특정 유저가 특정 설문지에 답변한 정보',
   })
   async getAnswers(
     @Args('surveyResponse') surveyResponse: SurveyResponse,
@@ -41,16 +47,16 @@ export class AnswerResolver {
     @Args('id', { type: () => Int, description: '답변 고유 아이디' })
     id: number,
   ) {
-    return await this.answersService.findById(id);
+    return await this.answersService.findOneById(id);
   }
 
   @ResolveField(() => Question)
   async question(@Parent() answer: Answer) {
-    return await this.answersService.findQuestionById(answer.id);
+    return await this.questionLoader.findOneById.load(answer.questionId);
   }
 
   @ResolveField(() => Option)
   async option(@Parent() answer: Answer) {
-    return await this.answersService.findOptionById(answer.id);
+    return await this.optionLoader.findOneById.load(answer.optionId);
   }
 }

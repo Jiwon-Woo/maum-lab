@@ -11,10 +11,14 @@ import { SurveysService } from '../surveys.service';
 import { Question } from 'src/questions/entities/question.entity';
 import { Pagination } from 'src/utils/pagination';
 import { SurveysConnection } from '../dto/surveys.dto';
+import { QuestionLoader } from 'src/questions/question.loader';
 
 @Resolver(Survey)
 export class SurveyResolver {
-  constructor(private surveysService: SurveysService) {}
+  constructor(
+    private surveysService: SurveysService,
+    private questionLoader: QuestionLoader,
+  ) {}
 
   @Query(() => SurveysConnection, { description: '모든 설문지 조회' })
   async allSurveys(@Args('pagination') pagination: Pagination) {
@@ -30,11 +34,11 @@ export class SurveyResolver {
     @Args('id', { type: () => Int, description: '설문지 고유 아이디' })
     id: number,
   ) {
-    return await this.surveysService.findById(id);
+    return await this.surveysService.findOneById(id);
   }
 
-  @ResolveField(() => [Question])
+  @ResolveField(() => [Question], { nullable: true })
   async questions(@Parent() survey: Survey) {
-    return await this.surveysService.findQuestionsById(survey.id);
+    return await this.questionLoader.findBySurveyId.load(survey.id);
   }
 }

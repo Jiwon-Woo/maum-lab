@@ -11,7 +11,7 @@ export class AnswersService {
     @InjectRepository(Answer) private answerRepository: Repository<Answer>,
   ) {}
 
-  async findById(id: number) {
+  async findOneById(id: number) {
     return await this.answerRepository.findOne({ where: { id } });
   }
 
@@ -52,21 +52,5 @@ export class AnswersService {
       .andWhere('user_code = :userCode', { userCode })
       .getRawOne<{ totalScore: number }>();
     return answers?.totalScore;
-  }
-
-  async findQuestionById(id: number) {
-    const answer = await this.answerRepository.findOne({
-      where: { id },
-      relations: ['question'],
-    });
-    return answer?.question;
-  }
-
-  async findOptionById(id: number) {
-    const answer = await this.answerRepository.findOne({
-      where: { id },
-      relations: ['option'],
-    });
-    return answer?.option;
   }
 }

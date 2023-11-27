@@ -11,10 +11,14 @@ import { OptionsService } from '../options.service';
 import { Question } from 'src/questions/entities/question.entity';
 import { Pagination } from 'src/utils/pagination';
 import { OptionsConnection } from '../dto/options.dto';
+import { QuestionLoader } from '../../questions/question.loader';
 
 @Resolver(Option)
 export class OptionResolver {
-  constructor(private optionsService: OptionsService) {}
+  constructor(
+    private optionsService: OptionsService,
+    private questionLoader: QuestionLoader,
+  ) {}
 
   @Query(() => OptionsConnection, {
     description: '특정 설문지 문항에 해당하는 선택지 목록',
@@ -28,7 +32,7 @@ export class OptionResolver {
     @Args('pagination') pagination: Pagination,
   ) {
     const { pageSize } = pagination;
-    const [options, count] = await this.optionsService.findByQuestionId(
+    const [options, count] = await this.optionsService.findAndCountByQuestionId(
       questionId,
       pagination,
     );
@@ -42,11 +46,11 @@ export class OptionResolver {
     @Args('id', { type: () => Int, description: '선택지 고유 아이디' })
     id: number,
   ) {
-    return await this.optionsService.findById(id);
+    return await this.optionsService.findOneById(id);
   }
 
   @ResolveField(() => Question)
   async question(@Parent() option: Option) {
-    return await this.optionsService.findQuestionById(option.id);
+    return await this.questionLoader.findOneById.load(option.questionId);
   }
 }

@@ -11,10 +11,16 @@ import { QuestionsService } from '../questions.service';
 import { Survey } from 'src/surveys/entities/survey.entity';
 import { Pagination } from 'src/utils/pagination';
 import { QuestionsConnection } from '../dto/questions.dto';
+import { OptionLoader } from '../../options/option.loader';
+import { SurveyLoader } from 'src/surveys/survey.loader';
 
 @Resolver(Question)
 export class QuestionResolver {
-  constructor(private questionsService: QuestionsService) {}
+  constructor(
+    private questionsService: QuestionsService,
+    private optionLoader: OptionLoader,
+    private surveyLoader: SurveyLoader,
+  ) {}
 
   @Query(() => QuestionsConnection, {
     description: '설문지 고유 아이디를 통해 해당 설문지에 속한 문항 목록 조회',
@@ -37,16 +43,16 @@ export class QuestionResolver {
     @Args('id', { type: () => Int, description: '문항 고유 아이디' })
     id: number,
   ) {
-    return await this.questionsService.findById(id);
+    return await this.questionsService.findOneById(id);
   }
 
   @ResolveField(() => Survey)
   async survey(@Parent() question: Question) {
-    return await this.questionsService.findSurveyById(question.id);
+    return await this.surveyLoader.findOneById.load(question.surveyId);
   }
 
   @ResolveField(() => [Option])
   async options(@Parent() question: Question) {
-    return await this.questionsService.findOptionsById(question.id);
+    return await this.optionLoader.findByQuestionId.load(question.id);
   }
 }

@@ -161,7 +161,7 @@ type Query {
     id: Int!
   ): Option!
 
-  """특정 유저가 특정 설문지에 답변한 정보 """
+  """특정 유저가 특정 설문지에 답변한 정보"""
   getAnswers(surveyResponse: SurveyResponse!, pagination: Pagination!): AnswersConnection!
 
   """답변 고유 아이디를 통해 특정 답변 정보 조회"""
