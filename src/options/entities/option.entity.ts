@@ -18,7 +18,7 @@ export class Option {
   id: number;
 
   @Field({ description: '문항 선택지 내용' })
-  @Column()
+  @Column({ length: 255 })
   content: string;
 
   @Field(() => Int, { description: '문항 선택지 번호' })

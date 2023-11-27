@@ -21,11 +21,11 @@ export class Question {
   id: number;
 
   @Field({ description: '설문지 문항 제목' })
-  @Column()
+  @Column({ length: 255 })
   title: string;
 
   @Field({ description: '설문지 문항 부가 설명', nullable: true })
-  @Column({ nullable: true })
+  @Column({ length: 255, nullable: true })
   description?: string;
 
   @Field(() => Int, { description: '설문지 문항 번호' })

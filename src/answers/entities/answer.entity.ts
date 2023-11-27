@@ -17,7 +17,7 @@ export class Answer {
   id: number;
 
   @Field({ description: '설문에 참여한 유저' })
-  @Column()
+  @Column({ length: 255 })
   userCode: string;
 
   @Column()

@@ -22,7 +22,7 @@ export class Survey {
   title: string;
 
   @Field({ description: '설문지 설명', nullable: true })
-  @Column({ type: 'text', nullable: true })
+  @Column({ length: 255, nullable: true })
   description?: string;
 
   @Field(() => [Question], { description: '설문지의 문항들' })

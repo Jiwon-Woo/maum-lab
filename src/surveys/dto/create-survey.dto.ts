@@ -7,6 +7,7 @@ export class CreateSurveyInput {
   @Field({ description: '설문지 제목' })
   title: string;
 
+  @MaxLength(255)
   @Field({ description: '설문지 설명', nullable: true })
   description?: string;
 }
