@@ -2,7 +2,9 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Answer } from '../entities/answer.entity';
 import { MetaData } from 'src/utils/metadata';
 
-@ObjectType()
+@ObjectType({
+  description: '특정 유저가 특정 설문지에 답변한 정보와 메타 데이터',
+})
 export class AnswersConnection extends MetaData {
   @Field(() => Int, {
     description: '특정 유저가 특정 설문지에 답변한 선택지 점수의 총점',

@@ -56,6 +56,7 @@ type Survey {
   questions: [Question!]!
 }
 
+"""설문지 목록과 메타 데이터"""
 type SurveysConnection {
   """전체 아이템 개수"""
   totalCount: Int!
@@ -70,6 +71,7 @@ type SurveysConnection {
   surveys: [Survey!]!
 }
 
+"""특정 설문지의 문항 목록과 메타데이터"""
 type QuestionsConnection {
   """전체 아이템 개수"""
   totalCount: Int!
@@ -79,9 +81,12 @@ type QuestionsConnection {
 
   """페이지당 최대 아이템 개수"""
   pageSize: Int!
+
+  """특정 설문지의 문항 목록"""
   questions: [Question!]!
 }
 
+"""설문지 특정 문항의 선택지 목록과 메타데이터"""
 type OptionsConnection {
   """전체 아이템 개수"""
   totalCount: Int!
@@ -91,9 +96,12 @@ type OptionsConnection {
 
   """페이지당 최대 아이템 개수"""
   pageSize: Int!
+
+  """설문지 특정 문항의 선택지 목록"""
   options: [Option!]!
 }
 
+"""설문지 문항 답변"""
 type Answer {
   """설문지 문항 답변의 고유 아이디"""
   id: ID!
@@ -108,6 +116,7 @@ type Answer {
   option: Option!
 }
 
+"""특정 유저가 특정 설문지에 답변한 정보와 메타 데이터"""
 type AnswersConnection {
   """전체 아이템 개수"""
   totalCount: Int!
@@ -180,7 +189,7 @@ input Pagination {
   pageSize: Int = 10
 }
 
-"""설문지 응답을 조회하기 위한 정보"""
+"""설문지 응답 정보"""
 input SurveyResponse {
   """설문지 고유 아이디"""
   surveyId: Int!
