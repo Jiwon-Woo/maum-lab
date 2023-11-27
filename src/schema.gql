@@ -234,8 +234,19 @@ type Mutation {
   ): Boolean!
   createQuestion(questionInfo: CreateQuestionInput!): Question!
   updateQuestion(questionId: Int!, questionInfo: UpdateQuestionInput!): Question!
-  updateQuestionsOrder(questionsOrder: [UpdateQuestionOrderInput!]!): [Question!]!
+  updateQuestionsOrder(questionsOrder: [UpdateQuestionsOrderInput!]!): [Question!]!
   deleteQuestion(questionId: Int!): Boolean!
+  createOption(optionInfo: CreateOptionInput!): Option!
+  updateOption(
+    """선택지 고유 아이디"""
+    optionId: Int!
+    optionInfo: UpdateOptionInput!
+  ): Option!
+  updateOptionsOrder(optionsOrder: [UpdateOptionsOrderInput!]!): [Option!]!
+  deleteOption(
+    """선택지 고유 아이디"""
+    optionId: Int!
+  ): Boolean!
 }
 
 input CreateSurveyInput {
@@ -273,6 +284,31 @@ input UpdateQuestionInput {
   description: String
 }
 
-input UpdateQuestionOrderInput {
+input UpdateQuestionsOrderInput {
   id: Int!
+  order: Int!
+}
+
+input CreateOptionInput {
+  """선택지를 생성할 문항 고유 아이디"""
+  questionId: Int!
+
+  """문항 선택지 내용"""
+  content: String!
+
+  """문항 선택지 점수"""
+  score: Int!
+}
+
+input UpdateOptionInput {
+  """문항 선택지 내용"""
+  content: String
+
+  """문항 선택지 점수"""
+  score: Int
+}
+
+input UpdateOptionsOrderInput {
+  id: Int!
+  order: Int!
 }

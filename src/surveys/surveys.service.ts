@@ -42,7 +42,10 @@ export class SurveysService {
     if (!survey) {
       throw new NotFoundException();
     }
-    const updatedSurvey = { ...survey, ...surveyInfo };
+    const updatedSurvey = this.surveyRepository.create({
+      ...survey,
+      ...surveyInfo,
+    });
     return await this.surveyRepository.save(updatedSurvey);
   }
 

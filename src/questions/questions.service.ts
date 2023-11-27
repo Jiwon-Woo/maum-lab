@@ -64,19 +64,22 @@ export class QuestionsService {
     if (!question) {
       throw new BadRequestException();
     }
-    const updatedQuestion = { ...question, ...questionInfo };
+    const updatedQuestion = this.questionRepository.create({
+      ...question,
+      ...questionInfo,
+    });
     return await this.questionRepository.save(updatedQuestion);
   }
 
-  async updateOrder(questionsInput: UpdateQuestionsOrderInput[]) {
-    const ids = questionsInput.map((question) => question.id);
+  async updateOrder(questionsOrder: UpdateQuestionsOrderInput[]) {
+    const ids = questionsOrder.map((question) => question.id);
     const questions = await this.findByIds(ids);
-    if (questions.length !== questionsInput.length) {
+    if (questions.length !== ids.length) {
       throw new BadRequestException();
     }
-    const updatedQuestions = ids.map((id, index) => {
-      const question = questions.find((q) => q.id === id)!;
-      question.order = index + 1;
+    const updatedQuestions = questions.map((question) => {
+      const questionInput = questionsOrder.find((q) => q.id === question.id)!;
+      question.order = questionInput.order;
       return question;
     });
     return await this.questionRepository.save(updatedQuestions);
