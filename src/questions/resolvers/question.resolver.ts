@@ -28,7 +28,8 @@ export class QuestionResolver {
   async getQuestions(
     @Args('surveyId', { type: () => Int, description: '설문지 고유 아이디' })
     surveyId: number,
-    @Args('pagination') pagination: Pagination,
+    @Args('pagination', { nullable: true })
+    pagination: Pagination = new Pagination(),
   ) {
     const { pageSize } = pagination;
     const [questions, count] =

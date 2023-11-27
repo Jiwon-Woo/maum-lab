@@ -21,7 +21,10 @@ export class SurveyResolver {
   ) {}
 
   @Query(() => SurveysConnection, { description: '모든 설문지 조회' })
-  async allSurveys(@Args('pagination') pagination: Pagination) {
+  async allSurveys(
+    @Args('pagination', { nullable: true })
+    pagination: Pagination = new Pagination(),
+  ) {
     const { pageSize } = pagination;
     const [surveys, count] = await this.surveysService.findAndCount(pagination);
     return new SurveysConnection(surveys, count, pageSize);

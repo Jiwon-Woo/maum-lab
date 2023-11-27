@@ -29,7 +29,8 @@ export class OptionResolver {
       description: '설문지 문항의 고유 아이디',
     })
     questionId: number,
-    @Args('pagination') pagination: Pagination,
+    @Args('pagination', { nullable: true })
+    pagination: Pagination = new Pagination(),
   ) {
     const { pageSize } = pagination;
     const [options, count] = await this.optionsService.findAndCountByQuestionId(

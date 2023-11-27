@@ -127,7 +127,7 @@ type AnswersConnection {
 
 type Query {
   """모든 설문지 조회"""
-  allSurveys(pagination: Pagination!): SurveysConnection!
+  allSurveys(pagination: Pagination): SurveysConnection!
 
   """설문지 고유 아이디를 통한 특정 설문지 조회"""
   survey(
@@ -139,7 +139,7 @@ type Query {
   getQuestions(
     """설문지 고유 아이디"""
     surveyId: Int!
-    pagination: Pagination!
+    pagination: Pagination
   ): QuestionsConnection!
 
   """문항 고유 아이디를 통해 특정 문항 조회"""
@@ -152,7 +152,7 @@ type Query {
   getOptions(
     """설문지 문항의 고유 아이디"""
     questionId: Int!
-    pagination: Pagination!
+    pagination: Pagination
   ): OptionsConnection!
 
   """선택지 고유 아이디를 통한 특정 선택지 조회"""
@@ -162,7 +162,7 @@ type Query {
   ): Option!
 
   """특정 유저가 특정 설문지에 답변한 정보"""
-  getAnswers(surveyResponse: SurveyResponse!, pagination: Pagination!): AnswersConnection!
+  getAnswers(surveyResponse: SurveyResponse!, pagination: Pagination): AnswersConnection!
 
   """답변 고유 아이디를 통해 특정 답변 정보 조회"""
   answer(

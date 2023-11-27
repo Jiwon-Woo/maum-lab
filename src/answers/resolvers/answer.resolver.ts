@@ -28,7 +28,8 @@ export class AnswerResolver {
   })
   async getAnswers(
     @Args('surveyResponse') surveyResponse: SurveyResponse,
-    @Args('pagination') pagination: Pagination,
+    @Args('pagination', { nullable: true })
+    pagination: Pagination = new Pagination(),
   ) {
     const { pageSize } = pagination;
     const [answers, count] =
