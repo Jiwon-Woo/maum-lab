@@ -18,7 +18,7 @@ import { CreateQuestionInput } from '../dto/create-question.dto';
 import { SurveysService } from '../../surveys/surveys.service';
 import { BadRequestException } from '@nestjs/common';
 import { UpdateQuestionInput } from '../dto/update-question.dto';
-import { UpdateQuestionOrderInput } from '../dto/update-question-order.dto';
+import { UpdateQuestionsOrderInput } from '../dto/update-questions-order.dto';
 
 @Resolver(Question)
 export class QuestionResolver {
@@ -77,8 +77,8 @@ export class QuestionResolver {
 
   @Mutation(() => [Question])
   async updateQuestionsOrder(
-    @Args('questionsOrder', { type: () => [UpdateQuestionOrderInput] })
-    questionsOrder: UpdateQuestionOrderInput[],
+    @Args('questionsOrder', { type: () => [UpdateQuestionsOrderInput] })
+    questionsOrder: UpdateQuestionsOrderInput[],
   ) {
     return await this.questionsService.updateOrder(questionsOrder);
   }

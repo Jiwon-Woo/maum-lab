@@ -9,7 +9,7 @@ import { In, Repository } from 'typeorm';
 import { Pagination } from 'src/utils/pagination';
 import { CreateQuestionInput } from './dto/create-question.dto';
 import { UpdateQuestionInput } from './dto/update-question.dto';
-import { UpdateQuestionOrderInput } from './dto/update-question-order.dto';
+import { UpdateQuestionsOrderInput } from './dto/update-questions-order.dto';
 
 @Injectable()
 export class QuestionsService {
@@ -68,7 +68,7 @@ export class QuestionsService {
     return await this.questionRepository.save(updatedQuestion);
   }
 
-  async updateOrder(questionsInput: UpdateQuestionOrderInput[]) {
+  async updateOrder(questionsInput: UpdateQuestionsOrderInput[]) {
     const ids = questionsInput.map((question) => question.id);
     const questions = await this.findByIds(ids);
     if (questions.length !== questionsInput.length) {
