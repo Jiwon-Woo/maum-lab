@@ -1,6 +1,14 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import { Question } from 'src/questions/entities/question.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @ObjectType({ description: '설문지 문항의 선택지' })
 @Entity('option')
@@ -29,4 +37,15 @@ export class Option {
   })
   @ManyToOne(() => Question, (question) => question.options)
   question: Question;
+
+  @Field(() => Date, { description: '설문지 문항 선택지 생성 일시' })
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
+
+  @Field(() => Date, { description: '설문지 문항 선택지 수정 일시' })
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date;
+
+  @DeleteDateColumn({ type: 'timestamp', nullable: true })
+  deletedAt: Date;
 }
