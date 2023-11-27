@@ -5,6 +5,7 @@ import {
   Parent,
   Args,
   Int,
+  Mutation,
 } from '@nestjs/graphql';
 import { Option } from '../entities/option.entity';
 import { OptionsService } from '../options.service';
@@ -12,11 +13,17 @@ import { Question } from 'src/questions/entities/question.entity';
 import { Pagination } from 'src/utils/pagination';
 import { OptionsConnection } from '../dto/options.dto';
 import { QuestionLoader } from '../../questions/question.loader';
+import { CreateOptionInput } from '../dto/create-option.dto';
+import { UpdateOptionInput } from '../dto/update-option.dto';
+import { UpdateOptionsOrderInput } from '../dto/update-options-order.dto';
+import { QuestionsService } from '../../questions/questions.service';
+import { BadRequestException } from '@nestjs/common';
 
 @Resolver(Option)
 export class OptionResolver {
   constructor(
     private optionsService: OptionsService,
+    private questionsService: QuestionsService,
     private questionLoader: QuestionLoader,
   ) {}
 
@@ -49,6 +56,42 @@ export class OptionResolver {
     id: number,
   ) {
     return await this.optionsService.findOneById(id);
+  }
+
+  @Mutation(() => Option)
+  async createOption(@Args('optionInfo') optionInfo: CreateOptionInput) {
+    const { questionId } = optionInfo;
+    const question = await this.questionsService.findOneById(questionId);
+    if (!question) {
+      throw new BadRequestException();
+    }
+    return await this.optionsService.create(optionInfo);
+  }
+
+  @Mutation(() => Option)
+  async updateOption(
+    @Args('optionId', { type: () => Int, description: '선택지 고유 아이디' })
+    id: number,
+    @Args('optionInfo') optionInfo: UpdateOptionInput,
+  ) {
+    return await this.optionsService.update(id, optionInfo);
+  }
+
+  @Mutation(() => [Option])
+  async updateOptionsOrder(
+    @Args('optionsOrder', { type: () => [UpdateOptionsOrderInput] })
+    optionsOrder: UpdateOptionsOrderInput[],
+  ) {
+    return this.optionsService.updateOrder(optionsOrder);
+  }
+
+  @Mutation(() => Boolean)
+  async deleteOption(
+    @Args('optionId', { type: () => Int, description: '선택지 고유 아이디' })
+    id: number,
+  ) {
+    await this.optionsService.delete(id);
+    return true;
   }
 
   // TODO: question 없는 경우 예외 처리
