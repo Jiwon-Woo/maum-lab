@@ -30,6 +30,7 @@ export class SurveyResolver {
     return new SurveysConnection(surveys, count, pageSize);
   }
 
+  // TODO: survey 없는 경우 예외 처리
   @Query(() => Survey, {
     description: '설문지 고유 아이디를 통한 특정 설문지 조회',
   })
@@ -40,7 +41,7 @@ export class SurveyResolver {
     return await this.surveysService.findOneById(id);
   }
 
-  @ResolveField(() => [Question], { nullable: true })
+  @ResolveField(() => [Question])
   async questions(@Parent() survey: Survey) {
     return await this.questionLoader.findBySurveyId.load(survey.id);
   }

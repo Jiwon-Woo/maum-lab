@@ -41,6 +41,7 @@ export class AnswerResolver {
     return new AnswersConnection(answers, count, pageSize, totalScore);
   }
 
+  // TODO: answer 없는 경우 예외 처리
   @Query(() => Answer, {
     description: '답변 고유 아이디를 통해 특정 답변 정보 조회',
   })
@@ -51,11 +52,13 @@ export class AnswerResolver {
     return await this.answersService.findOneById(id);
   }
 
+  // TODO: question 없는 경우 예외 처리
   @ResolveField(() => Question)
   async question(@Parent() answer: Answer) {
     return await this.questionLoader.findOneById.load(answer.questionId);
   }
 
+  // TODO: option 없는 경우 예외 처리
   @ResolveField(() => Option)
   async option(@Parent() answer: Answer) {
     return await this.optionLoader.findOneById.load(answer.optionId);

@@ -34,12 +34,4 @@ export class QuestionsService {
       take: pageSize,
     });
   }
-
-  async findOneSurveyById(id: number) {
-    const question = await this.questionRepository.findOne({
-      where: { id },
-      relations: ['survey'],
-    });
-    return question?.survey;
-  }
 }

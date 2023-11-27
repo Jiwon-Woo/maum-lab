@@ -40,6 +40,7 @@ export class OptionResolver {
     return new OptionsConnection(options, count, pageSize);
   }
 
+  // TODO: option 없는 경우 예외 처리
   @Query(() => Option, {
     description: '선택지 고유 아이디를 통한 특정 선택지 조회',
   })
@@ -50,6 +51,7 @@ export class OptionResolver {
     return await this.optionsService.findOneById(id);
   }
 
+  // TODO: question 없는 경우 예외 처리
   @ResolveField(() => Question)
   async question(@Parent() option: Option) {
     return await this.questionLoader.findOneById.load(option.questionId);

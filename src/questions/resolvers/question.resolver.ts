@@ -37,6 +37,7 @@ export class QuestionResolver {
     return new QuestionsConnection(questions, count, pageSize);
   }
 
+  // TODO: question 없는 경우 예외 처리
   @Query(() => Question, {
     description: '문항 고유 아이디를 통해 특정 문항 조회',
   })
@@ -47,6 +48,7 @@ export class QuestionResolver {
     return await this.questionsService.findOneById(id);
   }
 
+  // TODO: survey 없는 경우 예외 처리
   @ResolveField(() => Survey)
   async survey(@Parent() question: Question) {
     return await this.surveyLoader.findOneById.load(question.surveyId);
