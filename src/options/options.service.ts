@@ -16,9 +16,13 @@ export class OptionsService {
   ) {}
 
   async findOneById(id: number) {
-    return await this.optionRepository.findOne({
+    const option = await this.optionRepository.findOne({
       where: { id },
     });
+    if (!option) {
+      throw new BadRequestException();
+    }
+    return option;
   }
 
   async findAndCount(optionFilter: FilterOptionInput, pagination: Pagination) {
@@ -66,9 +70,6 @@ export class OptionsService {
 
   async update(id: number, optionInfo: UpdateOptionInput) {
     const option = await this.findOneById(id);
-    if (!option) {
-      throw new BadRequestException();
-    }
     const updatedOption = this.optionRepository.create({
       ...option,
       ...optionInfo,
@@ -76,9 +77,15 @@ export class OptionsService {
     return await this.optionRepository.save(updatedOption);
   }
 
-  async updateOrder(optionsOrder: UpdateOptionsOrderInput[]) {
+  async updateOrder(updateOptionsOrderInput: UpdateOptionsOrderInput) {
+    const { optionsOrder, questionId } = updateOptionsOrderInput;
     const ids = optionsOrder.map((option) => option.id);
-    const options = await this.findByIds(ids);
+    const options = await this.optionRepository.find({
+      where: {
+        questionId,
+        id: In(ids),
+      },
+    });
     if (options.length !== ids.length) {
       throw new BadRequestException();
     }
@@ -92,9 +99,6 @@ export class OptionsService {
 
   async delete(id: number) {
     const option = await this.findOneById(id);
-    if (!option) {
-      throw new BadRequestException();
-    }
     await this.optionRepository.softRemove(option);
   }
 }

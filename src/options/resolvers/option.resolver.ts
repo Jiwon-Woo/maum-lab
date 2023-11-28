@@ -77,10 +77,10 @@ export class OptionResolver {
 
   @Mutation(() => [Option])
   async updateOptionsOrder(
-    @Args('optionsOrder', { type: () => [UpdateOptionsOrderInput] })
-    optionsOrder: UpdateOptionsOrderInput[],
+    @Args('optionsOrderInfo', { type: () => UpdateOptionsOrderInput })
+    optionsOrderInfo: UpdateOptionsOrderInput,
   ) {
-    return this.optionsService.updateOrder(optionsOrder);
+    return this.optionsService.updateOrder(optionsOrderInfo);
   }
 
   @Mutation(() => Boolean)

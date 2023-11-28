@@ -235,16 +235,16 @@ input Pagination {
 """설문지 문항 조회 필터"""
 input FilterQuestionInput {
   """설문지 고유 아이디"""
-  surveyId: Int!
+  surveyId: Int
 }
 
 """설문지 문항 선택지 조회 필터"""
 input FilterOptionInput {
   """설문지 고유 아이디"""
-  surveyId: Int!
+  surveyId: Int
 
   """설문지 문항 고유 아이디"""
-  questionId: Int!
+  questionId: Int
 }
 
 """설문지 응답 조회 필터"""
@@ -269,7 +269,7 @@ type Mutation {
   ): Boolean!
   createQuestion(questionInfo: CreateQuestionInput!): Question!
   updateQuestion(questionId: Int!, questionInfo: UpdateQuestionInput!): Question!
-  updateQuestionsOrder(questionsOrder: [UpdateQuestionsOrderInput!]!): [Question!]!
+  updateQuestionsOrder(questionsOrderInfo: UpdateQuestionsOrderInput!): [Question!]!
   deleteQuestion(questionId: Int!): Boolean!
   createOption(optionInfo: CreateOptionInput!): Option!
   updateOption(
@@ -277,7 +277,7 @@ type Mutation {
     optionId: Int!
     optionInfo: UpdateOptionInput!
   ): Option!
-  updateOptionsOrder(optionsOrder: [UpdateOptionsOrderInput!]!): [Option!]!
+  updateOptionsOrder(optionsOrderInfo: UpdateOptionsOrderInput!): [Option!]!
   deleteOption(
     """선택지 고유 아이디"""
     optionId: Int!
@@ -339,6 +339,11 @@ input UpdateQuestionInput {
 }
 
 input UpdateQuestionsOrderInput {
+  surveyId: Int!
+  questionsOrder: [QuestionsOrder!]!
+}
+
+input QuestionsOrder {
   id: Int!
   orderNumber: Int!
 }
@@ -363,6 +368,11 @@ input UpdateOptionInput {
 }
 
 input UpdateOptionsOrderInput {
+  questionId: Int!
+  optionsOrder: [OptionOrder!]!
+}
+
+input OptionOrder {
   id: Int!
   orderNumber: Int!
 }

@@ -90,9 +90,16 @@ export class QuestionsService {
     return await this.questionRepository.save(updatedQuestion);
   }
 
-  async updateOrder(questionsOrder: UpdateQuestionsOrderInput[]) {
+  async updateOrder(updateQuestionsOrderInput: UpdateQuestionsOrderInput) {
+    const { questionsOrder, surveyId } = updateQuestionsOrderInput;
+    console.log(questionsOrder);
     const ids = questionsOrder.map((question) => question.id);
-    const questions = await this.findByIds(ids);
+    const questions = await this.questionRepository.find({
+      where: {
+        surveyId,
+        id: In(ids),
+      },
+    });
     if (questions.length !== ids.length) {
       throw new BadRequestException();
     }

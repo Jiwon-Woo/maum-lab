@@ -80,10 +80,10 @@ export class QuestionResolver {
 
   @Mutation(() => [Question])
   async updateQuestionsOrder(
-    @Args('questionsOrder', { type: () => [UpdateQuestionsOrderInput] })
-    questionsOrder: UpdateQuestionsOrderInput[],
+    @Args('questionsOrderInfo', { type: () => UpdateQuestionsOrderInput })
+    questionsOrderInfo: UpdateQuestionsOrderInput,
   ) {
-    return await this.questionsService.updateOrder(questionsOrder);
+    return await this.questionsService.updateOrder(questionsOrderInfo);
   }
 
   @Mutation(() => Boolean)

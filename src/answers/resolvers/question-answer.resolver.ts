@@ -18,6 +18,7 @@ import { QuestionsService } from 'src/questions/questions.service';
 import { BadRequestException } from '@nestjs/common';
 import { UpdateQuestionAnswerInput } from '../dto/update-question-answer.dto';
 import { AnswerLoader } from '../answer.loader';
+import { OptionsService } from 'src/options/options.service';
 
 @Resolver(QuestionAnswer)
 export class QuestionAnswerResolver {
@@ -26,6 +27,7 @@ export class QuestionAnswerResolver {
     private answerLoader: AnswerLoader,
     private questionsService: QuestionsService,
     private questionLoader: QuestionLoader,
+    private optionsService: OptionsService,
     private optionLoader: OptionLoader,
   ) {}
 
@@ -65,6 +67,8 @@ export class QuestionAnswerResolver {
     id: number,
     @Args('questionAnswerInfo') questionAnswerInfo: UpdateQuestionAnswerInput,
   ) {
+    const { selectedOptionId } = questionAnswerInfo;
+    await this.optionsService.findOneById(selectedOptionId);
     return await this.answersService.updateQuestionAnswer(
       id,
       questionAnswerInfo,
@@ -78,7 +82,8 @@ export class QuestionAnswerResolver {
     @Args('id', { type: () => Int, description: '문항 답변 고유 아이디' })
     id: number,
   ) {
-    return await this.answersService.findOneQuestionAnswerById(id);
+    await this.answersService.deleteQuestionAnswer(id);
+    return true;
   }
 
   // TODO: survey answer 없는 경우 예외 처리
