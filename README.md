@@ -1,4 +1,8 @@
-# [마음연구소] 서버 실행 및 접속 방법
+# [마음연구소]
+
+<br>
+
+# 서버 실행 및 접속 방법
 
 ## 1. git clone
 ```
@@ -56,8 +60,22 @@ docker-compose up -d
 
 ## 5. Apollo 서버 접속
 
-`http://localhost:4000/graphql`
+> http://localhost:4000/graphql
 
-![Query](https://github.com/Jiwon-Woo/wanted-pre-onboarding-backend/assets/74581396/49011cd4-2baf-4d62-88e7-cd9569566f0a)
+![Query](https://github.com/Jiwon-Woo/wanted-pre-onboarding-backend/assets/74581396/fd8543f4-c01d-451a-bf2c-12933131907d)
 
-![Mutation](https://github.com/Jiwon-Woo/wanted-pre-onboarding-backend/assets/74581396/fd8543f4-c01d-451a-bf2c-12933131907d)
+![Mutation](https://github.com/Jiwon-Woo/wanted-pre-onboarding-backend/assets/74581396/49011cd4-2baf-4d62-88e7-cd9569566f0a)
+
+<br>
+
+# 데이터베이스 설계
+
+![](https://github.com/Jiwon-Woo/wanted-pre-onboarding-backend/assets/74581396/35e4f7cf-eedc-4b2a-a626-7b1a5820a30d)
+
+<br>
+
+# GraphQL 스키마 명세
+
+> http://localhost:4000/graphql
+
+![Schema](https://github.com/Jiwon-Woo/wanted-pre-onboarding-backend/assets/74581396/b8d42df3-37f0-4832-9204-7f9c1f69c156)
