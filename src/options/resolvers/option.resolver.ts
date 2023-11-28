@@ -18,6 +18,7 @@ import { UpdateOptionInput } from '../dto/update-option.dto';
 import { UpdateOptionsOrderInput } from '../dto/update-options-order.dto';
 import { QuestionsService } from '../../questions/questions.service';
 import { BadRequestException } from '@nestjs/common';
+import { FilterOptionInput } from '../dto/fillter-option.dto';
 
 @Resolver(Option)
 export class OptionResolver {
@@ -30,18 +31,15 @@ export class OptionResolver {
   @Query(() => OptionsConnection, {
     description: '특정 설문지 문항에 해당하는 선택지 목록',
   })
-  async getOptions(
-    @Args('questionId', {
-      type: () => Int,
-      description: '설문지 문항의 고유 아이디',
-    })
-    questionId: number,
+  async allOptions(
+    @Args('optionFilter', { nullable: true })
+    optionFilter: FilterOptionInput,
     @Args('pagination', { nullable: true })
     pagination: Pagination = new Pagination(),
   ) {
     const { pageSize } = pagination;
-    const [options, count] = await this.optionsService.findAndCountByQuestionId(
-      questionId,
+    const [options, count] = await this.optionsService.findAndCount(
+      optionFilter,
       pagination,
     );
     return new OptionsConnection(options, count, pageSize);

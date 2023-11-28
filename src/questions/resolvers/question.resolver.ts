@@ -19,6 +19,7 @@ import { SurveysService } from '../../surveys/surveys.service';
 import { BadRequestException } from '@nestjs/common';
 import { UpdateQuestionInput } from '../dto/update-question.dto';
 import { UpdateQuestionsOrderInput } from '../dto/update-questions-order.dto';
+import { FilterQuestionInput } from '../dto/fillter-question.dto';
 
 @Resolver(Question)
 export class QuestionResolver {
@@ -32,15 +33,17 @@ export class QuestionResolver {
   @Query(() => QuestionsConnection, {
     description: '설문지 고유 아이디를 통해 해당 설문지에 속한 문항 목록 조회',
   })
-  async getQuestions(
-    @Args('surveyId', { type: () => Int, description: '설문지 고유 아이디' })
-    surveyId: number,
+  async allQuestions(
+    @Args('questionFilter', { nullable: true })
+    questionFilter: FilterQuestionInput,
     @Args('pagination', { nullable: true })
     pagination: Pagination = new Pagination(),
   ) {
     const { pageSize } = pagination;
-    const [questions, count] =
-      await this.questionsService.findAndCountBySurveyId(surveyId, pagination);
+    const [questions, count] = await this.questionsService.findAndCount(
+      questionFilter,
+      pagination,
+    );
     return new QuestionsConnection(questions, count, pageSize);
   }
 

@@ -5,11 +5,12 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Question } from './entities/question.entity';
-import { In, Repository } from 'typeorm';
+import { FindOptionsWhere, In, Repository } from 'typeorm';
 import { Pagination } from 'src/utils/pagination';
 import { CreateQuestionInput } from './dto/create-question.dto';
 import { UpdateQuestionInput } from './dto/update-question.dto';
 import { UpdateQuestionsOrderInput } from './dto/update-questions-order.dto';
+import { FilterQuestionInput } from './dto/fillter-question.dto';
 
 @Injectable()
 export class QuestionsService {
@@ -36,10 +37,16 @@ export class QuestionsService {
     });
   }
 
-  async findAndCountBySurveyId(surveyId: number, pagination: Pagination) {
+  async findAndCount(
+    questionFilter: FilterQuestionInput,
+    pagination: Pagination,
+  ) {
     const { page, pageSize } = pagination;
+    const where: FindOptionsWhere<Question> = {};
+    where.surveyId = questionFilter?.surveyId;
+
     return await this.questionRepository.findAndCount({
-      where: { surveyId },
+      where: { ...where },
       order: { orderNumber: 'ASC' },
       skip: (page - 1) * pageSize,
       take: pageSize,

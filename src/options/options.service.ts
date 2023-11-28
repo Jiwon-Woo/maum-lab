@@ -1,11 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Option } from './entities/option.entity';
-import { Repository, In } from 'typeorm';
+import { Repository, In, FindOptionsWhere } from 'typeorm';
 import { Pagination } from 'src/utils/pagination';
 import { CreateOptionInput } from './dto/create-option.dto';
 import { UpdateOptionInput } from './dto/update-option.dto';
 import { UpdateOptionsOrderInput } from './dto/update-options-order.dto';
+import { FilterOptionInput } from './dto/fillter-option.dto';
 
 @Injectable()
 export class OptionsService {
@@ -20,10 +21,15 @@ export class OptionsService {
     });
   }
 
-  async findAndCountByQuestionId(questionId: number, pagination: Pagination) {
+  async findAndCount(optionFilter: FilterOptionInput, pagination: Pagination) {
     const { page, pageSize } = pagination;
+    const where: FindOptionsWhere<Option> = {};
+    where.question = { surveyId: optionFilter?.surveyId };
+    where.questionId = optionFilter?.questionId;
+
     return await this.optionRepository.findAndCount({
-      where: { questionId },
+      where: { ...where },
+      relations: ['question'],
       order: { orderNumber: 'ASC' },
       skip: (page - 1) * pageSize,
       take: pageSize,
