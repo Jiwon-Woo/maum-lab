@@ -91,4 +91,9 @@ export class SurveyAnswerResolver {
       surveyAnswer.id,
     );
   }
+
+  @ResolveField(() => Int, { nullable: true })
+  async totalScore(@Parent() surveyAnswer: SurveyAnswer) {
+    return await this.answerLoader.getAnswersTotalScore.load(surveyAnswer);
+  }
 }

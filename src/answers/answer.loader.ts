@@ -8,6 +8,23 @@ import { QuestionAnswer } from './entities/question-answer.entity';
 export class AnswerLoader {
   constructor(private answersService: AnswersService) {}
 
+  getAnswersTotalScore = new DataLoader<SurveyAnswer, number | null>(
+    async (surveyAnswers: SurveyAnswer[]) => {
+      const ids = surveyAnswers.map((surveyAnswer) => surveyAnswer.id);
+      const answers = await this.answersService.getAnswersTotalScore(ids);
+      return surveyAnswers.map((surveyAnswer) => {
+        const answer = answers.find(
+          (answer) => answer.surveyAnswerId === surveyAnswer.id,
+        );
+        let totalScore: number | null = answer?.totalScore ?? 0;
+        if (!surveyAnswer.completedAt) {
+          totalScore = null;
+        }
+        return totalScore;
+      });
+    },
+  );
+
   findOneSurveyAnswerById = new DataLoader<number, SurveyAnswer>(
     async (ids: number[]) => {
       const surveyAnswers =

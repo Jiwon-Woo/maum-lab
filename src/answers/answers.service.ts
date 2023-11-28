@@ -80,14 +80,20 @@ export class AnswersService {
     });
   }
 
-  async getTotalScore(id: number) {
+  async getAnswersTotalScore(ids: number[]) {
     const answers = await this.questionAnswerRepository
       .createQueryBuilder()
       .select('SUM(option.score)', 'totalScore')
-      .innerJoin('option', 'option', 'option.id = option_id')
-      .where('survey_answer_id = :id', { id })
-      .getRawOne<{ totalScore: number }>();
-    return answers?.totalScore ?? 0;
+      .addSelect('survey_answer_id', 'surveyAnswerId')
+      .innerJoin('option', 'option', 'option.id = selected_option_id')
+      .where('survey_answer_id IN (:...ids)', { ids })
+      .groupBy('survey_answer_id')
+      .getRawMany<{
+        totalScore: number | null;
+        surveyAnswerId: number;
+      }>();
+
+    return answers;
   }
 
   async findOneSurveyAnswerById(id: number) {
@@ -107,10 +113,11 @@ export class AnswersService {
 
   async updateSurveyAnswerEndAt(id: number) {
     const surveyAnswer = await this.findOneSurveyAnswerById(id);
-    const totalScore = await this.getTotalScore(surveyAnswer.id);
+    if (surveyAnswer.completedAt) {
+      throw new BadRequestException();
+    }
     await this.surveyAnswerRepository.update(id, {
       completedAt: () => 'CURRENT_TIMESTAMP(6)',
-      totalScore: totalScore,
     });
   }
 
