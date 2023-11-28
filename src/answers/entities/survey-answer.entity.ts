@@ -9,6 +9,7 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { QuestionAnswer } from './question-answer.entity';
 
@@ -47,13 +48,16 @@ export class SurveyAnswer {
 
   @Field({ description: '설문 응답을 시작한 시각' })
   @CreateDateColumn({ type: 'timestamp' })
-  startAt: Date;
+  createdAt: Date;
 
   @Field({ description: '설문 응답을 마친 시각', nullable: true })
   @Column({ type: 'timestamp', precision: 6, nullable: true })
-  endAt: Date;
+  completedAt: Date;
 
-  @Field({ description: '설문 응답 삭제 일시', nullable: true })
+  @Field({ description: '설문 응답 수정 일시' })
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date;
+
   @DeleteDateColumn({ type: 'timestamp', nullable: true })
   deletedAt: Date;
 }

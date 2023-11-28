@@ -53,7 +53,7 @@ export class SurveyAnswerResolver {
   }
 
   @Mutation(() => SurveyAnswer)
-  async startSurveyAnswer(
+  async createSurveyAnswer(
     @Args('surveyAnswerInfo') surveyAnswerInfo: CreateSurveyAnswerInput,
   ) {
     const { surveyId } = surveyAnswerInfo;
@@ -65,7 +65,7 @@ export class SurveyAnswerResolver {
   }
 
   @Mutation(() => Boolean)
-  async endSurveyAnswer(
+  async completeSurveyAnswer(
     @Args('surveyAnswerId', { type: () => Int }) id: number,
   ) {
     await this.answersService.updateSurveyAnswerEndAt(id);

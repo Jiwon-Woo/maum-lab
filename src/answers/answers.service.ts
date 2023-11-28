@@ -109,7 +109,7 @@ export class AnswersService {
     const surveyAnswer = await this.findOneSurveyAnswerById(id);
     const totalScore = await this.getTotalScore(surveyAnswer.id);
     await this.surveyAnswerRepository.update(id, {
-      endAt: () => 'CURRENT_TIMESTAMP(6)',
+      completedAt: () => 'CURRENT_TIMESTAMP(6)',
       totalScore: totalScore,
     });
   }
