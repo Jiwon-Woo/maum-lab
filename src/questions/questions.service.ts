@@ -19,7 +19,11 @@ export class QuestionsService {
   ) {}
 
   async findOneById(id: number) {
-    return await this.questionRepository.findOne({ where: { id } });
+    const question = await this.questionRepository.findOne({ where: { id } });
+    if (!question) {
+      throw new BadRequestException();
+    }
+    return question;
   }
 
   async findByIds(ids: number[]) {
@@ -36,34 +40,42 @@ export class QuestionsService {
     const { page, pageSize } = pagination;
     return await this.questionRepository.findAndCount({
       where: { surveyId },
-      order: { order: 'ASC' },
+      order: { orderNumber: 'ASC' },
       skip: (page - 1) * pageSize,
       take: pageSize,
     });
   }
 
+  async findOneByIdAndSurveyId(id: number, surveyId: number) {
+    const question = await this.questionRepository.findOne({
+      where: { id, surveyId },
+      relations: ['options'],
+    });
+    if (!question) {
+      throw new BadRequestException();
+    }
+    return question;
+  }
+
   async getMaxOrder(surveyId: number) {
     const lastQuestion = await this.questionRepository.findOne({
       where: { surveyId },
-      order: { order: 'DESC' },
+      order: { orderNumber: 'DESC' },
     });
-    return lastQuestion?.order ?? 0;
+    return lastQuestion?.orderNumber ?? 0;
   }
 
   async create(questionInfo: CreateQuestionInput) {
-    const maxOrder = await this.getMaxOrder(questionInfo.surveyId);
+    const maxOrderNumber = await this.getMaxOrder(questionInfo.surveyId);
     const question = this.questionRepository.create({
       ...questionInfo,
-      order: maxOrder + 1,
+      orderNumber: maxOrderNumber + 1,
     });
     return await this.questionRepository.save(question);
   }
 
   async update(id: number, questionInfo: UpdateQuestionInput) {
     const question = await this.findOneById(id);
-    if (!question) {
-      throw new BadRequestException();
-    }
     const updatedQuestion = this.questionRepository.create({
       ...question,
       ...questionInfo,
@@ -79,7 +91,7 @@ export class QuestionsService {
     }
     const updatedQuestions = questions.map((question) => {
       const questionInput = questionsOrder.find((q) => q.id === question.id)!;
-      question.order = questionInput.order;
+      question.orderNumber = questionInput.orderNumber;
       return question;
     });
     return await this.questionRepository.save(updatedQuestions);

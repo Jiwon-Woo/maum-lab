@@ -23,7 +23,7 @@ export class Option {
 
   @Field(() => Int, { description: '문항 선택지 번호' })
   @Column()
-  order: number;
+  orderNumber: number;
 
   @Field(() => Int, { description: '문항 선택지 점수' })
   @Column()

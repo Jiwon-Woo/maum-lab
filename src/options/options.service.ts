@@ -24,7 +24,7 @@ export class OptionsService {
     const { page, pageSize } = pagination;
     return await this.optionRepository.findAndCount({
       where: { questionId },
-      order: { order: 'ASC' },
+      order: { orderNumber: 'ASC' },
       skip: (page - 1) * pageSize,
       take: pageSize,
     });
@@ -37,23 +37,23 @@ export class OptionsService {
   async findByQuestionIds(questionIds: number[]) {
     return await this.optionRepository.find({
       where: { questionId: In(questionIds) },
-      order: { order: 'ASC' },
+      order: { orderNumber: 'ASC' },
     });
   }
 
   async getMaxOrder(questionId: number) {
     const lastQuestion = await this.optionRepository.findOne({
       where: { questionId },
-      order: { order: 'DESC' },
+      order: { orderNumber: 'DESC' },
     });
-    return lastQuestion?.order ?? 0;
+    return lastQuestion?.orderNumber ?? 0;
   }
 
   async create(optionInfo: CreateOptionInput) {
-    const maxOrder = await this.getMaxOrder(optionInfo.questionId);
+    const maxOrderNumber = await this.getMaxOrder(optionInfo.questionId);
     const option = this.optionRepository.create({
       ...optionInfo,
-      order: maxOrder + 1,
+      orderNumber: maxOrderNumber + 1,
     });
     return await this.optionRepository.save(option);
   }
@@ -78,7 +78,7 @@ export class OptionsService {
     }
     const updatedOptions = options.map((option) => {
       const optionInput = optionsOrder.find((o) => o.id === option.id)!;
-      option.order = optionInput.order;
+      option.orderNumber = optionInput.orderNumber;
       return option;
     });
     return await this.optionRepository.save(updatedOptions);

@@ -30,7 +30,7 @@ export class Question {
 
   @Field(() => Int, { description: '설문지 문항 번호' })
   @Column()
-  order: number;
+  orderNumber: number;
 
   @Column()
   surveyId: number;

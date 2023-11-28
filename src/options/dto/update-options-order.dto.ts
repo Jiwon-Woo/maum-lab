@@ -8,5 +8,5 @@ export class UpdateOptionsOrderInput {
 
   @Min(1)
   @Field(() => Int)
-  order: number;
+  orderNumber: number;
 }

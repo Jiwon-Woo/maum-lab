@@ -11,7 +11,7 @@ type Option {
   content: String!
 
   """문항 선택지 번호"""
-  order: Int!
+  orderNumber: Int!
 
   """문항 선택지 점수"""
   score: Int!
@@ -43,7 +43,7 @@ type Question {
   description: String
 
   """설문지 문항 번호"""
-  order: Int!
+  orderNumber: Int!
 
   """해당 문항이 속한 설문지"""
   survey: Survey!
@@ -124,23 +124,55 @@ type OptionsConnection {
   options: [Option!]!
 }
 
-"""설문지 문항 답변"""
-type Answer {
-  """설문지 문항 답변의 고유 아이디"""
+type SurveyAnswer {
+  """설문지 응답 정보"""
   id: ID!
 
   """설문에 참여한 유저"""
   userCode: String!
 
+  """설문 응답 점수"""
+  totalScore: Int
+
+  """설문지 정보"""
+  survey: Survey!
+
+  """해당 설문에 대한 문항 답변 정보"""
+  questionAnwers: [QuestionAnswer!]!
+
+  """설문 응답을 시작한 시각"""
+  startAt: DateTime!
+
+  """설문 응답을 마친 시각"""
+  endAt: DateTime
+
+  """설문 응답 삭제 일시"""
+  deletedAt: DateTime
+}
+
+"""설문지 문항 답변"""
+type QuestionAnswer {
+  """설문지 문항 답변의 고유 아이디"""
+  id: ID!
+
+  """설문지 응답 정보"""
+  surveyAnswer: SurveyAnswer!
+
   """답변한 설문지 문항 정보"""
   question: Question!
 
   """유저가 고른 선택지 정보"""
-  option: Option!
+  selectedOption: Option!
+
+  """설문지 문항 답변 생성 일시"""
+  createdAt: DateTime!
+
+  """설문지 문항 답변 수정 일시"""
+  updatedAt: DateTime!
 }
 
 """특정 유저가 특정 설문지에 답변한 정보와 메타 데이터"""
-type AnswersConnection {
+type SurveyAnswersConnection {
   """전체 아이템 개수"""
   totalCount: Int!
 
@@ -150,11 +182,8 @@ type AnswersConnection {
   """페이지당 최대 아이템 개수"""
   pageSize: Int!
 
-  """특정 유저가 특정 설문지에 답변한 선택지 점수의 총점"""
-  totalScore: Int
-
   """특정 유저가 특정 설문지에 답변한 정보"""
-  answers: [Answer!]!
+  surveyAnswers: [SurveyAnswer!]!
 }
 
 type Query {
@@ -193,14 +222,15 @@ type Query {
     id: Int!
   ): Option!
 
-  """특정 유저가 특정 설문지에 답변한 정보"""
-  getAnswers(surveyResponse: SurveyResponse!, pagination: Pagination): AnswersConnection!
-
-  """답변 고유 아이디를 통해 특정 답변 정보 조회"""
-  answer(
-    """답변 고유 아이디"""
+  """문항 답변 고유 아이디를 통해 특정 답변 정보 조회"""
+  questionAnswer(
+    """문항 답변 고유 아이디"""
     id: Int!
-  ): Answer!
+  ): QuestionAnswer!
+
+  """특정 유저가 특정 설문지에 답변한 정보"""
+  allSurveyAnswers(surveyAnswerFilter: FilterSurveyAnswerInput, pagination: Pagination): SurveyAnswersConnection!
+  surveyAnswer(surveyAnswerId: Int!): SurveyAnswer!
 }
 
 """페이지네이션"""
@@ -212,13 +242,13 @@ input Pagination {
   pageSize: Int = 10
 }
 
-"""설문지 응답 정보"""
-input SurveyResponse {
+"""설문지 응답 조회 필터"""
+input FilterSurveyAnswerInput {
   """설문지 고유 아이디"""
-  surveyId: Int!
+  surveyId: Int
 
   """설문지에 참여한 유저"""
-  userCode: String!
+  userCode: String
 }
 
 type Mutation {
@@ -247,6 +277,25 @@ type Mutation {
     """선택지 고유 아이디"""
     optionId: Int!
   ): Boolean!
+
+  """특정 문항에 대한 답변 생성"""
+  createQuestionAnswer(questionAnswerInfo: CreateQuestionAnswerInput!): QuestionAnswer!
+
+  """특정 문항에 대한 답변 수정"""
+  updateQuestionAnswer(
+    """문항 답변 고유 아이디"""
+    id: Int!
+    questionAnswerInfo: UpdateQuestionAnswerInput!
+  ): QuestionAnswer!
+
+  """문항 답변 고유 아이디를 통해 특정 답변 정보 삭제"""
+  deleteQuestionAnswer(
+    """문항 답변 고유 아이디"""
+    id: Int!
+  ): Boolean!
+  startSurveyAnswer(surveyAnswerInfo: CreateSurveyAnswerInput!): SurveyAnswer!
+  endSurveyAnswer(surveyAnswerId: Int!): Boolean!
+  deleteSurveyAnswer(surveyAnswerId: Int!): Boolean!
 }
 
 input CreateSurveyInput {
@@ -286,7 +335,7 @@ input UpdateQuestionInput {
 
 input UpdateQuestionsOrderInput {
   id: Int!
-  order: Int!
+  orderNumber: Int!
 }
 
 input CreateOptionInput {
@@ -310,5 +359,24 @@ input UpdateOptionInput {
 
 input UpdateOptionsOrderInput {
   id: Int!
-  order: Int!
+  orderNumber: Int!
+}
+
+input CreateQuestionAnswerInput {
+  surveyAnswerId: Int!
+  questionId: Int!
+  selectedOptionId: Int!
+}
+
+input UpdateQuestionAnswerInput {
+  selectedOptionId: Int!
+}
+
+"""설문지 응답 정보"""
+input CreateSurveyAnswerInput {
+  """설문지 고유 아이디"""
+  surveyId: Int!
+
+  """설문지에 참여한 유저"""
+  userCode: String!
 }
