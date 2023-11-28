@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import DataLoader from 'dataloader';
 import { Question } from 'src/questions/entities/question.entity';
 import { QuestionsService } from './questions.service';
@@ -6,12 +6,10 @@ import { QuestionsService } from './questions.service';
 @Injectable()
 export class QuestionLoader {
   constructor(private questionsService: QuestionsService) {}
+  private readonly logger = new Logger(QuestionLoader.name);
 
   findOneById = new DataLoader<number, Question>(async (ids: number[]) => {
     const questions = await this.questionsService.findByIds(ids);
-    if (questions.length !== ids.length) {
-      throw new BadRequestException();
-    }
     return ids.map((id) => questions.find((question) => question.id === id)!);
   });
 

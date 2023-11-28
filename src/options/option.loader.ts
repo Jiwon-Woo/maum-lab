@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { OptionsService } from './options.service';
 import DataLoader from 'dataloader';
 import { Option } from './entities/option.entity';
@@ -6,12 +6,10 @@ import { Option } from './entities/option.entity';
 @Injectable()
 export class OptionLoader {
   constructor(private optionsService: OptionsService) {}
+  private readonly logger = new Logger(OptionLoader.name);
 
   findOneById = new DataLoader<number, Option>(async (ids: number[]) => {
     const options = await this.optionsService.findByIds(ids);
-    if (options.length !== ids.length) {
-      throw new BadRequestException();
-    }
     return ids.map((id) => options.find((option) => option.id === id)!);
   });
 

@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QuestionAnswer } from './entities/question-answer.entity';
 import { FindOptionsWhere, Repository, In } from 'typeorm';
@@ -17,6 +17,7 @@ export class AnswersService {
     @InjectRepository(SurveyAnswer)
     private surveyAnswerRepository: Repository<SurveyAnswer>,
   ) {}
+  private readonly logger = new Logger(AnswersService.name);
 
   async findAndCountQuestionAnswer(
     surveyAnswerId: number,
@@ -131,9 +132,13 @@ export class AnswersService {
   }
 
   async findSurveyAnswerByIds(ids: number[]) {
-    return await this.surveyAnswerRepository.find({
+    const surveyAnswers = await this.surveyAnswerRepository.find({
       where: { id: In(ids) },
     });
+    if (surveyAnswers.length !== ids.length) {
+      throw new BadRequestException();
+    }
+    return surveyAnswers;
   }
 
   async findQuestionAnswerBySurveyAnswerId(surveyAnswerIds: number[]) {

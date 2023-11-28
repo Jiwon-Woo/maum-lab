@@ -15,7 +15,7 @@ import { OptionLoader } from 'src/options/option.loader';
 import { SurveyAnswer } from '../entities/survey-answer.entity';
 import { CreateQuestionAnswerInput } from '../dto/create-question-answer.dto';
 import { QuestionsService } from 'src/questions/questions.service';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, Logger } from '@nestjs/common';
 import { UpdateQuestionAnswerInput } from '../dto/update-question-answer.dto';
 import { AnswerLoader } from '../answer.loader';
 import { OptionsService } from 'src/options/options.service';
@@ -30,6 +30,7 @@ export class QuestionAnswerResolver {
     private optionsService: OptionsService,
     private optionLoader: OptionLoader,
   ) {}
+  private readonly logger = new Logger(QuestionAnswerResolver.name);
 
   @Query(() => QuestionAnswer, {
     description: '고유 아이디로 특정 답변 정보 조회',

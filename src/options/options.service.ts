@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Option } from './entities/option.entity';
 import { Repository, In, FindOptionsWhere } from 'typeorm';
@@ -14,6 +14,7 @@ export class OptionsService {
     @InjectRepository(Option)
     private optionRepository: Repository<Option>,
   ) {}
+  private readonly logger = new Logger(OptionsService.name);
 
   async findOneById(id: number) {
     const option = await this.optionRepository.findOne({
@@ -41,7 +42,13 @@ export class OptionsService {
   }
 
   async findByIds(ids: number[]) {
-    return this.optionRepository.find({ where: { id: In(ids) } });
+    const options = await this.optionRepository.find({
+      where: { id: In(ids) },
+    });
+    if (options.length !== ids.length) {
+      throw new BadRequestException();
+    }
+    return options;
   }
 
   async findByQuestionIds(questionIds: number[]) {

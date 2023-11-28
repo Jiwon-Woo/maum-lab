@@ -8,7 +8,7 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { SurveyAnswer } from '../entities/survey-answer.entity';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, Logger } from '@nestjs/common';
 import { CreateSurveyAnswerInput } from '../dto/create-survey-answer.dto';
 import { SurveysService } from 'src/surveys/surveys.service';
 import { AnswersService } from '../answers.service';
@@ -28,6 +28,7 @@ export class SurveyAnswerResolver {
     private surveysService: SurveysService,
     private surveyLoader: SurveyLoader,
   ) {}
+  private readonly logger = new Logger(SurveyAnswerResolver.name);
 
   @Query(() => SurveyAnswersConnection, {
     description: '유저가 설문지에 답변한 정보 전체 조회',

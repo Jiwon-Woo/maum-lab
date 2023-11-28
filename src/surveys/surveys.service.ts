@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { Survey } from './entities/survey.entity';
 import { Repository, In } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -12,6 +12,7 @@ export class SurveysService {
     @InjectRepository(Survey)
     private surveyRepository: Repository<Survey>,
   ) {}
+  private readonly logger = new Logger(SurveysService.name);
 
   async findAndCount(pagination: Pagination) {
     const { page, pageSize } = pagination;
@@ -33,7 +34,13 @@ export class SurveysService {
   }
 
   async findByIds(ids: number[]) {
-    return await this.surveyRepository.find({ where: { id: In(ids) } });
+    const surveys = await this.surveyRepository.find({
+      where: { id: In(ids) },
+    });
+    if (surveys.length !== ids.length) {
+      throw new BadRequestException();
+    }
+    return surveys;
   }
 
   async create(surveyInfo: CreateSurveyInput) {

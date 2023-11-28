@@ -17,7 +17,7 @@ import { CreateOptionInput } from '../dto/create-option.dto';
 import { UpdateOptionInput } from '../dto/update-option.dto';
 import { UpdateOptionsOrderInput } from '../dto/update-options-order.dto';
 import { QuestionsService } from '../../questions/questions.service';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, Logger } from '@nestjs/common';
 import { FilterOptionInput } from '../dto/fillter-option.dto';
 
 @Resolver(Option)
@@ -27,6 +27,7 @@ export class OptionResolver {
     private questionsService: QuestionsService,
     private questionLoader: QuestionLoader,
   ) {}
+  private readonly logger = new Logger(OptionResolver.name);
 
   @Query(() => OptionsConnection, {
     description: '전체 선택지 조회',
