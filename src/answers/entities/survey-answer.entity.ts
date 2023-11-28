@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType, Int } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Survey } from 'src/surveys/entities/survey.entity';
 import {
   Column,
@@ -14,7 +14,7 @@ import {
 import { QuestionAnswer } from './question-answer.entity';
 
 @ObjectType()
-@Entity('survey-answer')
+@Entity('survey_answer')
 export class SurveyAnswer {
   @Field(() => ID, { description: '설문지 응답 정보' })
   @PrimaryGeneratedColumn()
@@ -26,10 +26,6 @@ export class SurveyAnswer {
 
   @Column()
   surveyId: number;
-
-  @Field(() => Int, { description: '설문 응답 점수', nullable: true })
-  @Column({ nullable: true })
-  totalScore?: number;
 
   @Field({ description: '설문지 정보' })
   @ManyToOne(() => Survey)
