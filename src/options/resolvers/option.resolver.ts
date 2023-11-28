@@ -29,7 +29,7 @@ export class OptionResolver {
   ) {}
 
   @Query(() => OptionsConnection, {
-    description: '특정 설문지 문항에 해당하는 선택지 목록',
+    description: '전체 선택지 조회',
   })
   async allOptions(
     @Args('optionFilter', { nullable: true })
@@ -47,7 +47,7 @@ export class OptionResolver {
 
   // TODO: option 없는 경우 예외 처리
   @Query(() => Option, {
-    description: '선택지 고유 아이디를 통한 특정 선택지 조회',
+    description: '고유 아이디로 특정 선택지 조회',
   })
   async option(
     @Args('id', { type: () => Int, description: '선택지 고유 아이디' })
@@ -56,7 +56,7 @@ export class OptionResolver {
     return await this.optionsService.findOneById(id);
   }
 
-  @Mutation(() => Option)
+  @Mutation(() => Option, { description: '선택지 생성' })
   async createOption(@Args('optionInfo') optionInfo: CreateOptionInput) {
     const { questionId } = optionInfo;
     const question = await this.questionsService.findOneById(questionId);
@@ -66,7 +66,7 @@ export class OptionResolver {
     return await this.optionsService.create(optionInfo);
   }
 
-  @Mutation(() => Option)
+  @Mutation(() => Option, { description: '특정 선택지 수정' })
   async updateOption(
     @Args('optionId', { type: () => Int, description: '선택지 고유 아이디' })
     id: number,
@@ -75,7 +75,7 @@ export class OptionResolver {
     return await this.optionsService.update(id, optionInfo);
   }
 
-  @Mutation(() => [Option])
+  @Mutation(() => [Option], { description: '특정 문항 내의 선택지 순서 변경' })
   async updateOptionsOrder(
     @Args('optionsOrderInfo', { type: () => UpdateOptionsOrderInput })
     optionsOrderInfo: UpdateOptionsOrderInput,
@@ -83,7 +83,7 @@ export class OptionResolver {
     return this.optionsService.updateOrder(optionsOrderInfo);
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => Boolean, { description: '특정 선택지 삭제' })
   async deleteOption(
     @Args('optionId', { type: () => Int, description: '선택지 고유 아이디' })
     id: number,

@@ -13,14 +13,14 @@ import {
 } from 'typeorm';
 import { QuestionAnswer } from './question-answer.entity';
 
-@ObjectType()
+@ObjectType({ description: '유저가 설문지에 응답한 정보' })
 @Entity('survey_answer')
 export class SurveyAnswer {
-  @Field(() => ID, { description: '설문지 응답 정보' })
+  @Field(() => ID, { description: '유저의 설문지 응답 정보 고유 아이디' })
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Field({ description: '설문에 참여한 유저' })
+  @Field({ description: '설문에 응답한 유저' })
   @Column({ length: 255 })
   userCode: string;
 

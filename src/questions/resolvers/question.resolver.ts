@@ -30,7 +30,7 @@ export class QuestionResolver {
   ) {}
 
   @Query(() => QuestionsConnection, {
-    description: '설문지 고유 아이디를 통해 해당 설문지에 속한 문항 목록 조회',
+    description: '전체 문항 조회',
   })
   async allQuestions(
     @Args('questionFilter', { nullable: true })
@@ -48,7 +48,7 @@ export class QuestionResolver {
 
   // TODO: question 없는 경우 예외 처리
   @Query(() => Question, {
-    description: '문항 고유 아이디를 통해 특정 문항 조회',
+    description: '고유 아이디로 특정 문항 조회',
   })
   async question(
     @Args('id', { type: () => Int, description: '문항 고유 아이디' })
@@ -57,7 +57,7 @@ export class QuestionResolver {
     return await this.questionsService.findOneById(id);
   }
 
-  @Mutation(() => Question)
+  @Mutation(() => Question, { description: '문항 생성' })
   async createQuestion(
     @Args('questionInfo') questionInfo: CreateQuestionInput,
   ) {
@@ -66,15 +66,18 @@ export class QuestionResolver {
     return await this.questionsService.create(questionInfo);
   }
 
-  @Mutation(() => Question)
+  @Mutation(() => Question, { description: '특정 문항 수정' })
   async updateQuestion(
-    @Args('questionId', { type: () => Int }) id: number,
+    @Args('questionId', { type: () => Int, description: '문항의 고유 아이디' })
+    id: number,
     @Args('questionInfo') questionInfo: UpdateQuestionInput,
   ) {
     return await this.questionsService.update(id, questionInfo);
   }
 
-  @Mutation(() => [Question])
+  @Mutation(() => [Question], {
+    description: '특정 설문지 내의 문항 순서 변경',
+  })
   async updateQuestionsOrder(
     @Args('questionsOrderInfo', { type: () => UpdateQuestionsOrderInput })
     questionsOrderInfo: UpdateQuestionsOrderInput,
@@ -82,8 +85,11 @@ export class QuestionResolver {
     return await this.questionsService.updateOrder(questionsOrderInfo);
   }
 
-  @Mutation(() => Boolean)
-  async deleteQuestion(@Args('questionId', { type: () => Int }) id: number) {
+  @Mutation(() => Boolean, { description: '특정 문항 삭제' })
+  async deleteQuestion(
+    @Args('questionId', { type: () => Int, description: '문항의 고유 아이디' })
+    id: number,
+  ) {
     await this.questionsService.delete(id);
     return true;
   }

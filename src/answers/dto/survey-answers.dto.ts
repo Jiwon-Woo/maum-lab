@@ -3,11 +3,11 @@ import { MetaData } from 'src/utils/metadata';
 import { SurveyAnswer } from '../entities/survey-answer.entity';
 
 @ObjectType({
-  description: '특정 유저가 특정 설문지에 답변한 정보와 메타 데이터',
+  description: '유저가 설문지에 응답한 정보 목록과 메타 데이터',
 })
 export class SurveyAnswersConnection extends MetaData {
   @Field(() => [SurveyAnswer], {
-    description: '특정 유저가 특정 설문지에 답변한 정보',
+    description: '유저가 설문지에 답변한 정보 전체 조회',
   })
   surveyAnswers: SurveyAnswer[];
 

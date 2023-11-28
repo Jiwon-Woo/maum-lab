@@ -25,7 +25,7 @@ export class Survey {
   @Column({ length: 255, nullable: true })
   description?: string;
 
-  @Field(() => [Question], { description: '설문지의 문항들' })
+  @Field(() => [Question], { description: '설문지 문항들' })
   @OneToMany(() => Question, (question) => question.survey, { cascade: true })
   questions: Question[];
 

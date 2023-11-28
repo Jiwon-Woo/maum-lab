@@ -1,7 +1,7 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
 import { IsOptional, MaxLength } from 'class-validator';
 
-@InputType()
+@InputType({ description: '문항을 생성하기 위한 정보' })
 export class CreateQuestionInput {
   @Field(() => Int, { description: '문항이 속한 설문지 고유 아이디' })
   surveyId: number;

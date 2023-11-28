@@ -32,7 +32,7 @@ export class QuestionAnswerResolver {
   ) {}
 
   @Query(() => QuestionAnswer, {
-    description: '문항 답변 고유 아이디를 통해 특정 답변 정보 조회',
+    description: '고유 아이디로 특정 답변 정보 조회',
   })
   async questionAnswer(
     @Args('id', { type: () => Int, description: '문항 답변 고유 아이디' })

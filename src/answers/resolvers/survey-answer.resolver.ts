@@ -30,7 +30,7 @@ export class SurveyAnswerResolver {
   ) {}
 
   @Query(() => SurveyAnswersConnection, {
-    description: '특정 유저가 특정 설문지에 답변한 정보',
+    description: '유저가 설문지에 답변한 정보 전체 조회',
   })
   async allSurveyAnswers(
     @Args('surveyAnswerFilter', { nullable: true })
@@ -47,12 +47,20 @@ export class SurveyAnswerResolver {
     return new SurveyAnswersConnection(surveyAnswers, count, pageSize);
   }
 
-  @Query(() => SurveyAnswer)
-  async surveyAnswer(@Args('surveyAnswerId', { type: () => Int }) id: number) {
+  @Query(() => SurveyAnswer, {
+    description: '고유 아이디로 유저가 설문지에 응시한 정보 조회',
+  })
+  async surveyAnswer(
+    @Args('surveyAnswerId', {
+      type: () => Int,
+      description: '유저가 설문지에 응시한 정보의 고유 아이디',
+    })
+    id: number,
+  ) {
     return await this.answersService.findOneSurveyAnswerById(id);
   }
 
-  @Mutation(() => SurveyAnswer)
+  @Mutation(() => SurveyAnswer, { description: '유저가 설문지 응답 시작' })
   async createSurveyAnswer(
     @Args('surveyAnswerInfo') surveyAnswerInfo: CreateSurveyAnswerInput,
   ) {
@@ -64,17 +72,25 @@ export class SurveyAnswerResolver {
     return this.answersService.createSurveyAnswer(surveyAnswerInfo);
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => Boolean, { description: '유저가 설문지 응답 완료' })
   async completeSurveyAnswer(
-    @Args('surveyAnswerId', { type: () => Int }) id: number,
+    @Args('surveyAnswerId', {
+      type: () => Int,
+      description: '유저가 설문지에 응답한 정보의 고유 아이디',
+    })
+    id: number,
   ) {
     await this.answersService.completeSurveyAnswer(id);
     return true;
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => Boolean, { description: '유저가 설문지 응답한 정보를 삭제' })
   async deleteSurveyAnswer(
-    @Args('surveyAnswerId', { type: () => Int }) id: number,
+    @Args('surveyAnswerId', {
+      type: () => Int,
+      description: '유저가 설문지에 응답한 정보의 고유 아이디',
+    })
+    id: number,
   ) {
     await this.answersService.deleteSurveyAnswer(id);
     return true;
@@ -92,7 +108,10 @@ export class SurveyAnswerResolver {
     );
   }
 
-  @ResolveField(() => Int, { nullable: true })
+  @ResolveField(() => Int, {
+    nullable: true,
+    description: '유저의 설문지 응답 총점',
+  })
   async totalScore(@Parent() surveyAnswer: SurveyAnswer) {
     return await this.answerLoader.getAnswersTotalScore.load(surveyAnswer);
   }

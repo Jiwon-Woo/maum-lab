@@ -23,7 +23,7 @@ export class SurveyResolver {
     private questionLoader: QuestionLoader,
   ) {}
 
-  @Query(() => SurveysConnection, { description: '모든 설문지 조회' })
+  @Query(() => SurveysConnection, { description: '전체 설문지 조회' })
   async allSurveys(
     @Args('pagination', { nullable: true })
     pagination: Pagination = new Pagination(),
@@ -34,7 +34,7 @@ export class SurveyResolver {
   }
 
   @Query(() => Survey, {
-    description: '설문지 고유 아이디를 통한 특정 설문지 조회',
+    description: '고유 아이디로 특정 설문지 조회',
   })
   async survey(
     @Args('id', { type: () => Int, description: '설문지 고유 아이디' })
@@ -43,12 +43,12 @@ export class SurveyResolver {
     return await this.surveysService.findOneById(id);
   }
 
-  @Mutation(() => Survey)
+  @Mutation(() => Survey, { description: '설문지 생성' })
   async createSurvey(@Args('surveyInfo') surveyInfo: CreateSurveyInput) {
     return await this.surveysService.create(surveyInfo);
   }
 
-  @Mutation(() => Survey)
+  @Mutation(() => Survey, { description: '특정 설문지 수정' })
   async updateSurvey(
     @Args('surveyId', { type: () => Int, description: '설문지 고유 아이디' })
     id: number,
@@ -57,7 +57,7 @@ export class SurveyResolver {
     return await this.surveysService.update(id, surveyInfo);
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => Boolean, { description: '특정 설문지 삭제' })
   async deleteSurvey(
     @Args('surveyId', { type: () => Int, description: '설문지 고유 아이디' })
     id: number,
