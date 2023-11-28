@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Survey } from './entities/survey.entity';
 import { Repository, In } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -25,7 +25,11 @@ export class SurveysService {
   }
 
   async findOneById(id: number) {
-    return await this.surveyRepository.findOne({ where: { id } });
+    const survey = await this.surveyRepository.findOne({ where: { id } });
+    if (!survey) {
+      throw new BadRequestException();
+    }
+    return survey;
   }
 
   async findByIds(ids: number[]) {
@@ -39,9 +43,6 @@ export class SurveysService {
 
   async update(id: number, surveyInfo: UpdateSurveyInput) {
     const survey = await this.findOneById(id);
-    if (!survey) {
-      throw new NotFoundException();
-    }
     const updatedSurvey = this.surveyRepository.create({
       ...survey,
       ...surveyInfo,
@@ -55,7 +56,7 @@ export class SurveysService {
       relations: ['questions', 'questions.options'],
     });
     if (!survey) {
-      throw new NotFoundException();
+      throw new BadRequestException();
     }
     await this.surveyRepository.softRemove(survey);
   }

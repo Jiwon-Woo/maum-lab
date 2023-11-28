@@ -68,7 +68,7 @@ export class SurveyAnswerResolver {
   async completeSurveyAnswer(
     @Args('surveyAnswerId', { type: () => Int }) id: number,
   ) {
-    await this.answersService.updateSurveyAnswerEndAt(id);
+    await this.answersService.completeSurveyAnswer(id);
     return true;
   }
 

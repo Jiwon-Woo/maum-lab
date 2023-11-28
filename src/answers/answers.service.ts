@@ -23,7 +23,6 @@ export class AnswersService {
     pagination: Pagination,
   ) {
     const { page, pageSize } = pagination;
-
     return await this.questionAnswerRepository.findAndCount({
       where: { surveyAnswerId },
       skip: (page - 1) * pageSize,
@@ -89,10 +88,9 @@ export class AnswersService {
       .where('survey_answer_id IN (:...ids)', { ids })
       .groupBy('survey_answer_id')
       .getRawMany<{
-        totalScore: number | null;
+        totalScore: number;
         surveyAnswerId: number;
       }>();
-
     return answers;
   }
 
@@ -111,7 +109,7 @@ export class AnswersService {
     return await this.surveyAnswerRepository.save(surveyAnswer);
   }
 
-  async updateSurveyAnswerEndAt(id: number) {
+  async completeSurveyAnswer(id: number) {
     const surveyAnswer = await this.findOneSurveyAnswerById(id);
     if (surveyAnswer.completedAt) {
       throw new BadRequestException();

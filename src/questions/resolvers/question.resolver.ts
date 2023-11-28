@@ -16,7 +16,6 @@ import { OptionLoader } from '../../options/option.loader';
 import { SurveyLoader } from 'src/surveys/survey.loader';
 import { CreateQuestionInput } from '../dto/create-question.dto';
 import { SurveysService } from '../../surveys/surveys.service';
-import { BadRequestException } from '@nestjs/common';
 import { UpdateQuestionInput } from '../dto/update-question.dto';
 import { UpdateQuestionsOrderInput } from '../dto/update-questions-order.dto';
 import { FilterQuestionInput } from '../dto/fillter-question.dto';
@@ -63,10 +62,7 @@ export class QuestionResolver {
     @Args('questionInfo') questionInfo: CreateQuestionInput,
   ) {
     const { surveyId } = questionInfo;
-    const survey = await this.surveysService.findOneById(surveyId);
-    if (!survey) {
-      throw new BadRequestException();
-    }
+    await this.surveysService.findOneById(surveyId);
     return await this.questionsService.create(questionInfo);
   }
 

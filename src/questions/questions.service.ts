@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Question } from './entities/question.entity';
 import { FindOptionsWhere, In, Repository } from 'typeorm';
@@ -92,7 +88,6 @@ export class QuestionsService {
 
   async updateOrder(updateQuestionsOrderInput: UpdateQuestionsOrderInput) {
     const { questionsOrder, surveyId } = updateQuestionsOrderInput;
-    console.log(questionsOrder);
     const ids = questionsOrder.map((question) => question.id);
     const questions = await this.questionRepository.find({
       where: {
@@ -103,6 +98,7 @@ export class QuestionsService {
     if (questions.length !== ids.length) {
       throw new BadRequestException();
     }
+
     const updatedQuestions = questions.map((question) => {
       const questionInput = questionsOrder.find((q) => q.id === question.id)!;
       question.orderNumber = questionInput.orderNumber;
@@ -117,7 +113,7 @@ export class QuestionsService {
       relations: ['options'],
     });
     if (!question) {
-      throw new NotFoundException();
+      throw new BadRequestException();
     }
     await this.questionRepository.softRemove(question);
   }

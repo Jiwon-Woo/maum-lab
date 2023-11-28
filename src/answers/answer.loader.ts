@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { AnswersService } from './answers.service';
 import DataLoader from 'dataloader';
 import { SurveyAnswer } from './entities/survey-answer.entity';
@@ -16,9 +16,9 @@ export class AnswerLoader {
         const answer = answers.find(
           (answer) => answer.surveyAnswerId === surveyAnswer.id,
         );
-        let totalScore: number | null = answer?.totalScore ?? 0;
-        if (!surveyAnswer.completedAt) {
-          totalScore = null;
+        let totalScore = answer?.totalScore ?? null;
+        if (surveyAnswer.completedAt) {
+          totalScore = 0;
         }
         return totalScore;
       });
@@ -29,6 +29,9 @@ export class AnswerLoader {
     async (ids: number[]) => {
       const surveyAnswers =
         await this.answersService.findSurveyAnswerByIds(ids);
+      if (surveyAnswers.length !== ids.length) {
+        throw new BadRequestException();
+      }
       return ids.map(
         (id) => surveyAnswers.find((surveyAnswer) => surveyAnswer.id === id)!,
       );
