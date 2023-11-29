@@ -6,6 +6,7 @@ import { Pagination } from 'src/utils/pagination';
 import { CreateSurveyInput } from './dto/create-survey.dto';
 import { UpdateSurveyInput } from './dto/update-survey.dto';
 import { errorLogMessage } from 'src/utils/log-message';
+import { ErrorMessage } from 'src/utils/error-message';
 
 @Injectable()
 export class SurveysService {
@@ -30,7 +31,7 @@ export class SurveysService {
     const survey = await this.surveyRepository.findOne({ where: { id } });
     if (!survey) {
       this.logger.error(errorLogMessage('findOneById'), id);
-      throw new BadRequestException();
+      throw new BadRequestException(ErrorMessage.SURVEY_NOT_FOUND);
     }
     return survey;
   }
@@ -41,7 +42,7 @@ export class SurveysService {
     });
     if (surveys.length !== ids.length) {
       this.logger.error(errorLogMessage('findByIds'), ids, surveys);
-      throw new BadRequestException();
+      throw new BadRequestException(ErrorMessage.INVALID_IDS);
     }
     return surveys;
   }
@@ -67,7 +68,7 @@ export class SurveysService {
     });
     if (!survey) {
       this.logger.error(errorLogMessage('delete'), id);
-      throw new BadRequestException();
+      throw new BadRequestException(ErrorMessage.SURVEY_NOT_FOUND);
     }
     await this.surveyRepository.softRemove(survey);
   }

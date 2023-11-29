@@ -20,6 +20,7 @@ import { UpdateQuestionAnswerInput } from '../dto/update-question-answer.dto';
 import { AnswerLoader } from '../answer.loader';
 import { OptionsService } from 'src/options/options.service';
 import { errorLogMessage } from 'src/utils/log-message';
+import { ErrorMessage } from 'src/utils/error-message';
 
 @Resolver(QuestionAnswer)
 export class QuestionAnswerResolver {
@@ -64,7 +65,7 @@ export class QuestionAnswerResolver {
         surveyAnswer,
         question,
       );
-      throw new BadRequestException();
+      throw new BadRequestException(ErrorMessage.OPTION_NOT_FOUND_IN_QUESTION);
     }
     return await this.answersService.createQuestionAnswer(questionAnswerInfo);
   }
@@ -94,7 +95,6 @@ export class QuestionAnswerResolver {
     return true;
   }
 
-  // TODO: survey answer 없는 경우 예외 처리
   @ResolveField(() => SurveyAnswer)
   async surveyAnswer(@Parent() questionAnswer: QuestionAnswer) {
     return await this.answerLoader.findOneSurveyAnswerById.load(
@@ -102,7 +102,6 @@ export class QuestionAnswerResolver {
     );
   }
 
-  // TODO: question 없는 경우 예외 처리
   @ResolveField(() => Question)
   async question(@Parent() questionAnswer: QuestionAnswer) {
     return await this.questionLoader.findOneById.load(
@@ -110,7 +109,6 @@ export class QuestionAnswerResolver {
     );
   }
 
-  // TODO: option 없는 경우 예외 처리
   @ResolveField(() => Option)
   async selectedOption(@Parent() questionAnswer: QuestionAnswer) {
     return await this.optionLoader.findOneById.load(

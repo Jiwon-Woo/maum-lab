@@ -46,7 +46,6 @@ export class QuestionResolver {
     return new QuestionsConnection(questions, count, pageSize);
   }
 
-  // TODO: question 없는 경우 예외 처리
   @Query(() => Question, {
     description: '고유 아이디로 특정 문항 조회',
   })
@@ -94,7 +93,6 @@ export class QuestionResolver {
     return true;
   }
 
-  // TODO: survey 없는 경우 예외 처리
   @ResolveField(() => Survey)
   async survey(@Parent() question: Question) {
     return await this.surveyLoader.findOneById.load(question.surveyId);

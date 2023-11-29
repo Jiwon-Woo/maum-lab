@@ -9,6 +9,7 @@ import { FilterSurveyAnswerInput } from './dto/filter-survey-answer.dto';
 import { CreateQuestionAnswerInput } from './dto/create-question-answer.dto';
 import { UpdateQuestionAnswerInput } from './dto/update-question-answer.dto';
 import { errorLogMessage } from 'src/utils/log-message';
+import { ErrorMessage } from 'src/utils/error-message';
 
 @Injectable()
 export class AnswersService {
@@ -38,7 +39,7 @@ export class AnswersService {
     });
     if (!questionAnswer) {
       this.logger.error(errorLogMessage('findOneQuestionAnswerById'), id);
-      throw new BadRequestException();
+      throw new BadRequestException(ErrorMessage.QUESTION_ANSWER_NOT_FOUND);
     }
     return questionAnswer;
   }
@@ -103,7 +104,7 @@ export class AnswersService {
     });
     if (!surveyAnswer) {
       this.logger.error(errorLogMessage('findOneSurveyAnswerById'), id);
-      throw new BadRequestException();
+      throw new BadRequestException(ErrorMessage.SURVEY_ANSWER_NOT_FOUND);
     }
     return surveyAnswer;
   }
@@ -120,7 +121,9 @@ export class AnswersService {
         errorLogMessage('completeSurveyAnswer'),
         JSON.stringify(surveyAnswer, null, 2),
       );
-      throw new BadRequestException();
+      throw new BadRequestException(
+        ErrorMessage.SURVEY_ANSWER_ALREADY_COMPLETE,
+      );
     }
     await this.surveyAnswerRepository.update(id, {
       completedAt: () => 'CURRENT_TIMESTAMP(6)',
@@ -146,7 +149,7 @@ export class AnswersService {
     });
     if (!surveyAnswer) {
       this.logger.error(errorLogMessage('deleteSurveyAnswer'), id);
-      throw new BadRequestException();
+      throw new BadRequestException(ErrorMessage.SURVEY_ANSWER_NOT_FOUND);
     }
     await this.surveyAnswerRepository.softRemove(surveyAnswer);
   }
@@ -161,7 +164,7 @@ export class AnswersService {
         ids,
         surveyAnswers,
       );
-      throw new BadRequestException();
+      throw new BadRequestException(ErrorMessage.INVALID_IDS);
     }
     return surveyAnswers;
   }

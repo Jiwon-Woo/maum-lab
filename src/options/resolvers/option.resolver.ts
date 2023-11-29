@@ -20,6 +20,7 @@ import { QuestionsService } from '../../questions/questions.service';
 import { BadRequestException, Logger } from '@nestjs/common';
 import { FilterOptionInput } from '../dto/fillter-option.dto';
 import { errorLogMessage } from 'src/utils/log-message';
+import { ErrorMessage } from 'src/utils/error-message';
 
 @Resolver(Option)
 export class OptionResolver {
@@ -47,7 +48,6 @@ export class OptionResolver {
     return new OptionsConnection(options, count, pageSize);
   }
 
-  // TODO: option 없는 경우 예외 처리
   @Query(() => Option, {
     description: '고유 아이디로 특정 선택지 조회',
   })
@@ -64,7 +64,7 @@ export class OptionResolver {
     const question = await this.questionsService.findOneById(questionId);
     if (!question) {
       this.logger.error(errorLogMessage('createOption'), optionInfo);
-      throw new BadRequestException();
+      throw new BadRequestException(ErrorMessage.QUESTION_NOT_FOUND);
     }
     return await this.optionsService.create(optionInfo);
   }
@@ -95,7 +95,6 @@ export class OptionResolver {
     return true;
   }
 
-  // TODO: question 없는 경우 예외 처리
   @ResolveField(() => Question)
   async question(@Parent() option: Option) {
     return await this.questionLoader.findOneById.load(option.questionId);
