@@ -6,7 +6,7 @@
 
 ## 1. git clone
 ```
-https://github.com/Jiwon-Woo/mind-lab.git
+https://github.com/Jiwon-Woo/maum-lab.git
 ```
 <br>
 
