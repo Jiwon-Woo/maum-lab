@@ -8,7 +8,7 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { SurveyAnswer } from '../entities/survey-answer.entity';
-import { BadRequestException, Logger } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import { CreateSurveyAnswerInput } from '../dto/create-survey-answer.dto';
 import { SurveysService } from 'src/surveys/surveys.service';
 import { AnswersService } from '../answers.service';
@@ -19,6 +19,7 @@ import { SurveyLoader } from '../../surveys/survey.loader';
 import { QuestionAnswer } from '../entities/question-answer.entity';
 import { Survey } from 'src/surveys/entities/survey.entity';
 import { AnswerLoader } from '../answer.loader';
+import { plainLogMessage } from 'src/utils/log-message';
 
 @Resolver(SurveyAnswer)
 export class SurveyAnswerResolver {
@@ -66,10 +67,7 @@ export class SurveyAnswerResolver {
     @Args('surveyAnswerInfo') surveyAnswerInfo: CreateSurveyAnswerInput,
   ) {
     const { surveyId } = surveyAnswerInfo;
-    const survey = await this.surveysService.findOneById(surveyId);
-    if (!survey) {
-      throw new BadRequestException();
-    }
+    await this.surveysService.findOneById(surveyId);
     return this.answersService.createSurveyAnswer(surveyAnswerInfo);
   }
 
@@ -81,7 +79,12 @@ export class SurveyAnswerResolver {
     })
     id: number,
   ) {
-    await this.answersService.completeSurveyAnswer(id);
+    const currentSurveyAnswer =
+      await this.answersService.completeSurveyAnswer(id);
+    this.logger.log(
+      plainLogMessage('completeSurveyAnswer'),
+      JSON.stringify(currentSurveyAnswer, null, 2),
+    );
     return true;
   }
 

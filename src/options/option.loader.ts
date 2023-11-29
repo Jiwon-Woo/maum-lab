@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { OptionsService } from './options.service';
 import DataLoader from 'dataloader';
 import { Option } from './entities/option.entity';
+import { plainLogMessage } from 'src/utils/log-message';
 
 @Injectable()
 export class OptionLoader {
@@ -10,7 +11,11 @@ export class OptionLoader {
 
   findOneById = new DataLoader<number, Option>(async (ids: number[]) => {
     const options = await this.optionsService.findByIds(ids);
-    return ids.map((id) => options.find((option) => option.id === id)!);
+    const sortedOptions = ids.map(
+      (id) => options.find((option) => option.id === id)!,
+    );
+    this.logger.log(plainLogMessage('findOneById'), ids, sortedOptions);
+    return sortedOptions;
   });
 
   findByQuestionId = new DataLoader<number, Option[]>(
@@ -26,7 +31,15 @@ export class OptionLoader {
         optionGroups[questionId].push(option);
       });
 
-      return questionIds.map((questionId) => optionGroups[questionId] ?? []);
+      const sortedGroups = questionIds.map(
+        (questionId) => optionGroups[questionId] ?? [],
+      );
+      this.logger.log(
+        plainLogMessage('findByQuestionId'),
+        questionIds,
+        sortedGroups,
+      );
+      return sortedGroups;
     },
   );
 }

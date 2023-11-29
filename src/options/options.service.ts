@@ -7,6 +7,7 @@ import { CreateOptionInput } from './dto/create-option.dto';
 import { UpdateOptionInput } from './dto/update-option.dto';
 import { UpdateOptionsOrderInput } from './dto/update-options-order.dto';
 import { FilterOptionInput } from './dto/fillter-option.dto';
+import { errorLogMessage } from 'src/utils/log-message';
 
 @Injectable()
 export class OptionsService {
@@ -21,6 +22,7 @@ export class OptionsService {
       where: { id },
     });
     if (!option) {
+      this.logger.error(errorLogMessage('findOneById'), id);
       throw new BadRequestException();
     }
     return option;
@@ -46,6 +48,7 @@ export class OptionsService {
       where: { id: In(ids) },
     });
     if (options.length !== ids.length) {
+      this.logger.error(errorLogMessage('findByIds'), ids, options);
       throw new BadRequestException();
     }
     return options;
@@ -94,6 +97,12 @@ export class OptionsService {
       },
     });
     if (options.length !== ids.length) {
+      this.logger.error(
+        errorLogMessage('updateOrder'),
+        updateOptionsOrderInput,
+        ids,
+        options,
+      );
       throw new BadRequestException();
     }
     const updatedOptions = options.map((option) => {

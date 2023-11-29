@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Pagination } from 'src/utils/pagination';
 import { CreateSurveyInput } from './dto/create-survey.dto';
 import { UpdateSurveyInput } from './dto/update-survey.dto';
+import { errorLogMessage } from 'src/utils/log-message';
 
 @Injectable()
 export class SurveysService {
@@ -28,6 +29,7 @@ export class SurveysService {
   async findOneById(id: number) {
     const survey = await this.surveyRepository.findOne({ where: { id } });
     if (!survey) {
+      this.logger.error(errorLogMessage('findOneById'), id);
       throw new BadRequestException();
     }
     return survey;
@@ -38,6 +40,7 @@ export class SurveysService {
       where: { id: In(ids) },
     });
     if (surveys.length !== ids.length) {
+      this.logger.error(errorLogMessage('findByIds'), ids, surveys);
       throw new BadRequestException();
     }
     return surveys;
@@ -63,6 +66,7 @@ export class SurveysService {
       relations: ['questions', 'questions.options'],
     });
     if (!survey) {
+      this.logger.error(errorLogMessage('delete'), id);
       throw new BadRequestException();
     }
     await this.surveyRepository.softRemove(survey);

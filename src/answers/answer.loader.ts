@@ -3,6 +3,7 @@ import { AnswersService } from './answers.service';
 import DataLoader from 'dataloader';
 import { SurveyAnswer } from './entities/survey-answer.entity';
 import { QuestionAnswer } from './entities/question-answer.entity';
+import { plainLogMessage } from 'src/utils/log-message';
 
 @Injectable()
 export class AnswerLoader {
@@ -12,17 +13,28 @@ export class AnswerLoader {
   getAnswersTotalScore = new DataLoader<SurveyAnswer, number | null>(
     async (surveyAnswers: SurveyAnswer[]) => {
       const ids = surveyAnswers.map((surveyAnswer) => surveyAnswer.id);
-      const answers = await this.answersService.getAnswersTotalScore(ids);
-      return surveyAnswers.map((surveyAnswer) => {
-        const answer = answers.find(
-          (answer) => answer.surveyAnswerId === surveyAnswer.id,
+      const answersTotalScore =
+        await this.answersService.getAnswersTotalScore(ids);
+
+      const sortedTotalScore = surveyAnswers.map((surveyAnswer) => {
+        const answer = answersTotalScore.find(
+          (answerTotalScore) =>
+            answerTotalScore.surveyAnswerId === surveyAnswer.id,
         );
-        let totalScore = answer?.totalScore ?? null;
-        if (surveyAnswer.completedAt) {
-          totalScore = 0;
+        let totalScore: number | null = answer?.totalScore ?? 0;
+        if (!surveyAnswer.completedAt) {
+          totalScore = null;
         }
         return totalScore;
       });
+
+      this.logger.log(
+        plainLogMessage('getAnswersTotalScore'),
+        surveyAnswers,
+        answersTotalScore,
+        sortedTotalScore,
+      );
+      return sortedTotalScore;
     },
   );
 
@@ -30,9 +42,15 @@ export class AnswerLoader {
     async (ids: number[]) => {
       const surveyAnswers =
         await this.answersService.findSurveyAnswerByIds(ids);
-      return ids.map(
+      const sortedSurveyAnswers = ids.map(
         (id) => surveyAnswers.find((surveyAnswer) => surveyAnswer.id === id)!,
       );
+      this.logger.log(
+        plainLogMessage('findOneSurveyAnswerById'),
+        ids,
+        sortedSurveyAnswers,
+      );
+      return sortedSurveyAnswers;
     },
   );
 
@@ -52,9 +70,15 @@ export class AnswerLoader {
         questionAnswerGroup[surveyAnswerId].push(questionAnswer);
       });
 
-      return surveyAnswerIds.map(
+      const sortedGroups = surveyAnswerIds.map(
         (surveyAnswerId) => questionAnswerGroup[surveyAnswerId] ?? [],
       );
+      this.logger.log(
+        plainLogMessage('findQuestionAnswerBySurveyAnswerId'),
+        surveyAnswerIds,
+        sortedGroups,
+      );
+      return sortedGroups;
     },
   );
 }

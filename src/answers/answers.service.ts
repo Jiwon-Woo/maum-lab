@@ -8,6 +8,7 @@ import { SurveyAnswer } from './entities/survey-answer.entity';
 import { FilterSurveyAnswerInput } from './dto/filter-survey-answer.dto';
 import { CreateQuestionAnswerInput } from './dto/create-question-answer.dto';
 import { UpdateQuestionAnswerInput } from './dto/update-question-answer.dto';
+import { errorLogMessage } from 'src/utils/log-message';
 
 @Injectable()
 export class AnswersService {
@@ -36,6 +37,7 @@ export class AnswersService {
       where: { id },
     });
     if (!questionAnswer) {
+      this.logger.error(errorLogMessage('findOneQuestionAnswerById'), id);
       throw new BadRequestException();
     }
     return questionAnswer;
@@ -100,6 +102,7 @@ export class AnswersService {
       where: { id },
     });
     if (!surveyAnswer) {
+      this.logger.error(errorLogMessage('findOneSurveyAnswerById'), id);
       throw new BadRequestException();
     }
     return surveyAnswer;
@@ -113,11 +116,27 @@ export class AnswersService {
   async completeSurveyAnswer(id: number) {
     const surveyAnswer = await this.findOneSurveyAnswerById(id);
     if (surveyAnswer.completedAt) {
+      this.logger.error(
+        errorLogMessage('completeSurveyAnswer'),
+        JSON.stringify(surveyAnswer, null, 2),
+      );
       throw new BadRequestException();
     }
     await this.surveyAnswerRepository.update(id, {
       completedAt: () => 'CURRENT_TIMESTAMP(6)',
     });
+    const currentSurveyAnswer = await this.surveyAnswerRepository.findOne({
+      where: { id },
+      relations: [
+        'survey',
+        'survey.questions',
+        'survey.questions.options',
+        'questionAnwers',
+        'questionAnwers.question',
+        'questionAnwers.selectedOption',
+      ],
+    });
+    return currentSurveyAnswer;
   }
 
   async deleteSurveyAnswer(id: number) {
@@ -126,6 +145,7 @@ export class AnswersService {
       relations: ['questionAnwers'],
     });
     if (!surveyAnswer) {
+      this.logger.error(errorLogMessage('deleteSurveyAnswer'), id);
       throw new BadRequestException();
     }
     await this.surveyAnswerRepository.softRemove(surveyAnswer);
@@ -136,6 +156,11 @@ export class AnswersService {
       where: { id: In(ids) },
     });
     if (surveyAnswers.length !== ids.length) {
+      this.logger.error(
+        errorLogMessage('findSurveyAnswerByIds'),
+        ids,
+        surveyAnswers,
+      );
       throw new BadRequestException();
     }
     return surveyAnswers;

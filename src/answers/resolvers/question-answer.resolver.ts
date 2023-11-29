@@ -19,6 +19,7 @@ import { BadRequestException, Logger } from '@nestjs/common';
 import { UpdateQuestionAnswerInput } from '../dto/update-question-answer.dto';
 import { AnswerLoader } from '../answer.loader';
 import { OptionsService } from 'src/options/options.service';
+import { errorLogMessage } from 'src/utils/log-message';
 
 @Resolver(QuestionAnswer)
 export class QuestionAnswerResolver {
@@ -57,6 +58,12 @@ export class QuestionAnswerResolver {
       (option) => option.id === selectedOptionId,
     );
     if (!selectedOption) {
+      this.logger.error(
+        errorLogMessage('createQuestionAnswer'),
+        questionAnswerInfo,
+        surveyAnswer,
+        question,
+      );
       throw new BadRequestException();
     }
     return await this.answersService.createQuestionAnswer(questionAnswerInfo);

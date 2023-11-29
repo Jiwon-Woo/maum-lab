@@ -7,6 +7,7 @@ import { CreateQuestionInput } from './dto/create-question.dto';
 import { UpdateQuestionInput } from './dto/update-question.dto';
 import { UpdateQuestionsOrderInput } from './dto/update-questions-order.dto';
 import { FilterQuestionInput } from './dto/fillter-question.dto';
+import { errorLogMessage } from 'src/utils/log-message';
 
 @Injectable()
 export class QuestionsService {
@@ -19,6 +20,7 @@ export class QuestionsService {
   async findOneById(id: number) {
     const question = await this.questionRepository.findOne({ where: { id } });
     if (!question) {
+      this.logger.error(errorLogMessage('findOneById'), id);
       throw new BadRequestException();
     }
     return question;
@@ -29,6 +31,7 @@ export class QuestionsService {
       where: { id: In(ids) },
     });
     if (questions.length !== ids.length) {
+      this.logger.error(errorLogMessage('findByIds'), ids, questions);
       throw new BadRequestException();
     }
     return questions;
@@ -62,6 +65,12 @@ export class QuestionsService {
       relations: ['options'],
     });
     if (!question) {
+      this.logger.error(
+        errorLogMessage('findOneByIdAndSurveyId'),
+        id,
+        surveyId,
+      );
+
       throw new BadRequestException();
     }
     return question;
@@ -103,6 +112,12 @@ export class QuestionsService {
       },
     });
     if (questions.length !== ids.length) {
+      this.logger.error(
+        errorLogMessage('updateOrder'),
+        updateQuestionsOrderInput,
+        ids,
+        questions,
+      );
       throw new BadRequestException();
     }
 
@@ -120,6 +135,7 @@ export class QuestionsService {
       relations: ['options'],
     });
     if (!question) {
+      this.logger.error(errorLogMessage('delete'), id);
       throw new BadRequestException();
     }
     await this.questionRepository.softRemove(question);

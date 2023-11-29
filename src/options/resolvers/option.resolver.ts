@@ -19,6 +19,7 @@ import { UpdateOptionsOrderInput } from '../dto/update-options-order.dto';
 import { QuestionsService } from '../../questions/questions.service';
 import { BadRequestException, Logger } from '@nestjs/common';
 import { FilterOptionInput } from '../dto/fillter-option.dto';
+import { errorLogMessage } from 'src/utils/log-message';
 
 @Resolver(Option)
 export class OptionResolver {
@@ -62,6 +63,7 @@ export class OptionResolver {
     const { questionId } = optionInfo;
     const question = await this.questionsService.findOneById(questionId);
     if (!question) {
+      this.logger.error(errorLogMessage('createOption'), optionInfo);
       throw new BadRequestException();
     }
     return await this.optionsService.create(optionInfo);
