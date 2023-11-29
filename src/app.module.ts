@@ -29,7 +29,6 @@ import { AnswersModule } from './answers/answers.module';
       database: process.env.POSTGRES_DB,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       namingStrategy: new SnakeNamingStrategy(),
-      logging: true,
     }),
     SurveysModule,
     QuestionsModule,
