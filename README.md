@@ -62,15 +62,15 @@ docker-compose up -d
 
 > http://localhost:4000/graphql
 
-![Query](https://github.com/Jiwon-Woo/wanted-pre-onboarding-backend/assets/74581396/fd8543f4-c01d-451a-bf2c-12933131907d)
+![Query](https://github.com/Jiwon-Woo/maum-lab/assets/74581396/c77163d9-a288-4f9b-8f96-14d6b9c4987d)
 
-![Mutation](https://github.com/Jiwon-Woo/wanted-pre-onboarding-backend/assets/74581396/49011cd4-2baf-4d62-88e7-cd9569566f0a)
+![Mutation](https://github.com/Jiwon-Woo/maum-lab/assets/74581396/aa63a4db-2453-480e-9536-fee9eababae9)
 
 <br>
 
 # 데이터베이스 설계
 
-![](https://github.com/Jiwon-Woo/wanted-pre-onboarding-backend/assets/74581396/35e4f7cf-eedc-4b2a-a626-7b1a5820a30d)
+![DB](https://github.com/Jiwon-Woo/maum-lab/assets/74581396/70ac7e81-24e5-4e4a-aad8-9c47e6a20a6b)
 
 <br>
 
@@ -78,4 +78,4 @@ docker-compose up -d
 
 > http://localhost:4000/graphql
 
-![Schema](https://github.com/Jiwon-Woo/wanted-pre-onboarding-backend/assets/74581396/b8d42df3-37f0-4832-9204-7f9c1f69c156)
+![Schema](https://github.com/Jiwon-Woo/maum-lab/assets/74581396/7115dbd1-c5dd-4840-b892-83fc6808fa4c)
