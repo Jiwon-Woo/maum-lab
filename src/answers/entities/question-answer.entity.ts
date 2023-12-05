@@ -35,12 +35,12 @@ export class QuestionAnswer {
   surveyAnswer: SurveyAnswer;
 
   @Field(() => Question, { description: '답변한 설문지 문항 정보' })
-  @ManyToOne(() => Question)
+  @ManyToOne(() => Question, { cascade: true })
   @JoinColumn()
   question: Question;
 
   @Field(() => Option, { description: '유저가 고른 선택지 정보' })
-  @ManyToOne(() => Option)
+  @ManyToOne(() => Option, { cascade: true })
   @JoinColumn()
   selectedOption: Option;
 

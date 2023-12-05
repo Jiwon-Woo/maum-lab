@@ -28,7 +28,7 @@ export class SurveyAnswer {
   surveyId: number;
 
   @Field({ description: '설문지 정보' })
-  @ManyToOne(() => Survey)
+  @ManyToOne(() => Survey, { cascade: true })
   @JoinColumn()
   survey: Survey;
 
